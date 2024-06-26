@@ -1,0 +1,10 @@
+{
+  "entity.lotr.hired_gondor_soldier": "受雇佣刚铎士兵",
+  "entity.lotr.hired_bree_guard": "受雇佣布理守卫",
+  "container.lotrcompanions.companion_inventory": "同伴物品栏",
+  "item.lotrcompanions.hired_gondor_soldier_spawn_egg": "生成 受雇佣刚铎士兵",
+  "item.lotrcompanions.hired_bree_guard_spawn_egg": "生成 受雇佣布理守卫",
+  "item.lotrcompanions.one_coin": "银币",
+  "item.lotrcompanions.ten_coin": "银币 (10)",
+  "item.lotrcompanions.hundred_coin": "银币 (100)"
+}
