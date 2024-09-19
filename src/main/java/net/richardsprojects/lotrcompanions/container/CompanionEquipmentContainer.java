@@ -9,16 +9,15 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-
 import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.util.ResourceLocation;
 
-public class CompanionContainer extends Container {
+public class CompanionEquipmentContainer extends Container {
+
     private final IInventory container;
-    private final int containerRows = 1;
 
     private Slot[] armorSlots = new Slot[4];
     private Slot mainHand;
@@ -36,29 +35,11 @@ public class CompanionContainer extends Container {
 
     private static final int[] yPos = new int[]{31, 49, 67, 85};
 
-    public CompanionContainer(int p_39230_, PlayerInventory p_39231_, IInventory companionInv, int entityId) {
+    public CompanionEquipmentContainer(int p_39230_, PlayerInventory p_39231_, IInventory companionInv, int entityId) {
         super(null, p_39230_);
-        checkContainerSize(companionInv, companionInv.getContainerSize());
         this.container = companionInv;
         this.entityId = entityId;
         companionInv.startOpen(p_39231_.player);
-
-        // add the 9 companion inventory slots
-        for (int k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(companionInv, k, 8 + k * 18, 110));
-        }
-
-        // add the 3 rows of player inventory
-        for (int l = 0; l < 3; ++l) {
-            for (int j1 = 0; j1 < 9; ++j1) {
-                this.addSlot(new Slot(p_39231_, j1 + l * 9 + 9, 8 + j1 * 18, 142 + l * 18));
-            }
-        }
-
-        // add the player's hotbar
-        for (int i1 = 0; i1 < 9; ++i1) {
-            this.addSlot(new Slot(p_39231_, i1, 8 + i1 * 18, 200));
-        }
 
         // setup 4 custom armor slots
         for(int slot = 9; slot < 13; slot++) {
@@ -83,21 +64,17 @@ public class CompanionContainer extends Container {
             });
         }
 
-        // add the companion main hand and off hand slots
-        mainHand = this.addSlot(new Slot(companionInv, 13,44,67));
-        offHand = this.addSlot(new Slot(companionInv, 14,44,85) {
+        mainHand = this.addSlot(new Slot(companionInv, 13,61,64));
+        offHand = this.addSlot(new Slot(companionInv, 14,61,82)  {
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(PlayerContainer.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_SHIELD);
             }
         });
     }
 
-    public int getEntityId() {
-        return entityId;
-    }
-
-    public boolean stillValid(PlayerEntity p_39242_) {
-        return this.container.stillValid(p_39242_);
+    @Override
+    public boolean stillValid(PlayerEntity player) {
+        return this.container.stillValid(player);
     }
 
     public ItemStack quickMoveStack(PlayerEntity player, int p_39254_) {
@@ -106,14 +83,14 @@ public class CompanionContainer extends Container {
 
         // handle shift-clicking the main hand and sending it back to the player's inventory
         if (slot != null && slot.equals(mainHand) && slot.hasItem()) {
-           if (player.inventory.getFreeSlot() > -1 || player.inventory.getSlotWithRemainingSpace(slot.getItem()) > -1) {
-               player.addItem(slot.getItem());
-               mainHand.set(ItemStack.EMPTY);
-               mainHand.setChanged();
-           } else {
-               return ItemStack.EMPTY;
-           }
-        // handle shift-clicking offhand and sending it back to the player's inventory
+            if (player.inventory.getFreeSlot() > -1 || player.inventory.getSlotWithRemainingSpace(slot.getItem()) > -1) {
+                player.addItem(slot.getItem());
+                mainHand.set(ItemStack.EMPTY);
+                mainHand.setChanged();
+            } else {
+                return ItemStack.EMPTY;
+            }
+            // handle shift-clicking offhand and sending it back to the player's inventory
         } else if (slot != null && slot.equals(offHand) && slot.hasItem()) {
             if (player.inventory.getFreeSlot() > -1 || player.inventory.getSlotWithRemainingSpace(slot.getItem()) > -1) {
                 player.addItem(slot.getItem());
@@ -166,14 +143,6 @@ public class CompanionContainer extends Container {
                 return ItemStack.EMPTY;
             }
 
-            if (p_39254_ < this.containerRows * 9) {
-                if (!this.moveItemStackTo(itemstack1, this.containerRows * 9, this.slots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.moveItemStackTo(itemstack1, 0, this.containerRows * 9, false)) {
-                return ItemStack.EMPTY;
-            }
-
             if (itemstack1.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {
@@ -184,13 +153,8 @@ public class CompanionContainer extends Container {
         return itemstack;
     }
 
-    public void removed(PlayerEntity p_39251_) {
-        super.removed(p_39251_);
-        this.container.stopOpen(p_39251_);
+    public int getEntityId() {
+        return entityId;
     }
 
-    public int getRowCount() {
-        return this.containerRows;
-    }
 }
-

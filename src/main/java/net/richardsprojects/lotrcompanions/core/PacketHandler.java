@@ -6,7 +6,6 @@
  */
 package net.richardsprojects.lotrcompanions.core;
 
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -18,8 +17,10 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
+import net.richardsprojects.lotrcompanions.client.screen.CompanionEquipmentScreen;
 import net.richardsprojects.lotrcompanions.client.screen.CompanionScreen;
 import net.richardsprojects.lotrcompanions.container.CompanionContainer;
+import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
 import net.richardsprojects.lotrcompanions.npcs.HiredBreeGuard;
 import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
 import net.richardsprojects.lotrcompanions.networking.*;
@@ -43,8 +44,7 @@ public class PacketHandler {
                 SetStationaryPacket::handle);
         INSTANCE.registerMessage(id++, ReleasePacket.class, ReleasePacket::encode, ReleasePacket::decode,
                 ReleasePacket::handle);
-        INSTANCE.registerMessage(id++, UpdateHiredEntityEquipmentPacket.class, UpdateHiredEntityEquipmentPacket::encode,
-                UpdateHiredEntityEquipmentPacket::decode, UpdateHiredEntityEquipmentPacket::handle);
+        INSTANCE.registerMessage(id++, OpenEquipmentPacket.class, OpenEquipmentPacket::encode, OpenEquipmentPacket::decode, OpenEquipmentPacket::handle);
     }
 
     @SuppressWarnings("resource")
@@ -62,6 +62,33 @@ public class PacketHandler {
                 CompanionContainer container = new CompanionContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
                 clientplayerentity.containerMenu = container;
                 Minecraft.getInstance().setScreen(new CompanionScreen(container, player.inventory, companion));
+            } else if (entity instanceof HiredBreeGuard) {
+                HiredBreeGuard companion = (HiredBreeGuard) entity;
+
+                ClientPlayerEntity clientplayerentity = Minecraft.getInstance().player;
+
+                CompanionContainer container = new CompanionContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
+                clientplayerentity.containerMenu = container;
+                Minecraft.getInstance().setScreen(new CompanionScreen(container, player.inventory, companion));
+            }
+        }
+    }
+
+    @SuppressWarnings("resource")
+    @OnlyIn(Dist.CLIENT)
+    public static void openEquipmentMenu(OpenEquipmentPacket packet) {
+        PlayerEntity player = Minecraft.getInstance().player;
+        if (player != null) {
+            Entity entity = player.level.getEntity(packet.getEntityId());
+
+            if (entity instanceof HiredGondorSoldier) {
+                HiredGondorSoldier companion = (HiredGondorSoldier) entity;
+
+                ClientPlayerEntity clientplayerentity = Minecraft.getInstance().player;
+
+                CompanionEquipmentContainer container = new CompanionEquipmentContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
+                clientplayerentity.containerMenu = container;
+                Minecraft.getInstance().setScreen(new CompanionEquipmentScreen(container, player.inventory, companion));
             } else if (entity instanceof HiredBreeGuard) {
                 HiredBreeGuard companion = (HiredBreeGuard) entity;
 
