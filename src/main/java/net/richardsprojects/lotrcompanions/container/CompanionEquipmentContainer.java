@@ -77,6 +77,7 @@ public class CompanionEquipmentContainer extends Container {
         return this.container.stillValid(player);
     }
 
+    @Override
     public ItemStack quickMoveStack(PlayerEntity player, int p_39254_) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(p_39254_);

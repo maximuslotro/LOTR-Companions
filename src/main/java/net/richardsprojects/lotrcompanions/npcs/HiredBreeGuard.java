@@ -32,7 +32,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.richardsprojects.lotrcompanions.container.CompanionContainer;
+import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
 import net.richardsprojects.lotrcompanions.core.PacketHandler;
+import net.richardsprojects.lotrcompanions.networking.OpenEquipmentPacket;
 import net.richardsprojects.lotrcompanions.npcs.ai.*;
 import net.richardsprojects.lotrcompanions.networking.OpenInventoryPacket;
 import net.richardsprojects.lotrcompanions.utils.Constants;
@@ -277,6 +279,8 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         return super.isAlliedTo(p_184191_1_);
     }
 
+    // TODO: Open GUI for original menu, restore this when done testing Equipment Menu
+    /*
     public void openGui(ServerPlayerEntity player) {
         if (player.containerMenu != player.inventoryMenu) {
             player.closeContainer();
@@ -288,6 +292,25 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         setInventoryOpen(true);
 
         player.containerMenu = new CompanionContainer(
+                player.containerCounter, player.inventory, inventory, getId()
+        );
+
+        player.containerMenu.addSlotListener(player);
+        MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.containerMenu));
+    }
+    */
+
+    public void openGui(ServerPlayerEntity player) {
+        if (player.containerMenu != player.inventoryMenu) {
+            player.closeContainer();
+        }
+
+        player.nextContainerCounter();
+        PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new OpenEquipmentPacket(
+                player.containerCounter, this.inventory.getContainerSize(), this.getId()));
+        setInventoryOpen(true);
+
+        player.containerMenu = new CompanionEquipmentContainer(
                 player.containerCounter, player.inventory, inventory, getId()
         );
 

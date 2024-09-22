@@ -21,7 +21,7 @@ import java.text.DecimalFormat;
 
 public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipmentContainer> implements IHasContainer<CompanionEquipmentContainer> {
 
-    private static final ResourceLocation CONTAINER_BACKGROUND = new ResourceLocation(LOTRCompanions.MOD_ID,"textures/inventory.png");
+    private static final ResourceLocation CONTAINER_BACKGROUND = new ResourceLocation(LOTRCompanions.MOD_ID,"textures/upgrade_equipment_menu.png");
     private final ExtendedHirableEntity companion;
     DecimalFormat df = new DecimalFormat("#.#");
     int sidebarX;
