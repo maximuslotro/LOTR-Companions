@@ -20,11 +20,11 @@ public class CompanionContainer extends Container {
     private final IInventory container;
     private final int containerRows = 1;
 
+    private int entityId;
+/*
     private Slot[] armorSlots = new Slot[4];
     private Slot mainHand;
     private Slot offHand;
-
-    private int entityId;
 
     public static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET = new ResourceLocation("item/empty_armor_slot_helmet");
     public static final ResourceLocation EMPTY_ARMOR_SLOT_CHESTPLATE = new ResourceLocation("item/empty_armor_slot_chestplate");
@@ -33,7 +33,7 @@ public class CompanionContainer extends Container {
     public static final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD = new ResourceLocation("item/empty_armor_slot_shield");
     private static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
     private static final EquipmentSlotType[] SLOT_IDS = new EquipmentSlotType[]{EquipmentSlotType.HEAD, EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
-
+*/
     private static final int[] yPos = new int[]{31, 49, 67, 85};
 
     public CompanionContainer(int p_39230_, PlayerInventory p_39231_, IInventory companionInv, int entityId) {
@@ -60,6 +60,7 @@ public class CompanionContainer extends Container {
             this.addSlot(new Slot(p_39231_, i1, 8 + i1 * 18, 200));
         }
 
+        /*
         // setup 4 custom armor slots
         for(int slot = 9; slot < 13; slot++) {
             final EquipmentSlotType equipmentSlotType = SLOT_IDS[slot - 9];
@@ -90,6 +91,7 @@ public class CompanionContainer extends Container {
                 return Pair.of(PlayerContainer.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_SHIELD);
             }
         });
+        */
     }
 
     public int getEntityId() {
@@ -105,7 +107,7 @@ public class CompanionContainer extends Container {
         Slot slot = this.slots.get(p_39254_);
 
         // handle shift-clicking the main hand and sending it back to the player's inventory
-        if (slot != null && slot.equals(mainHand) && slot.hasItem()) {
+        /*if (slot != null && slot.equals(mainHand) && slot.hasItem()) {
            if (player.inventory.getFreeSlot() > -1 || player.inventory.getSlotWithRemainingSpace(slot.getItem()) > -1) {
                player.addItem(slot.getItem());
                mainHand.set(ItemStack.EMPTY);
@@ -122,11 +124,12 @@ public class CompanionContainer extends Container {
             } else {
                 return ItemStack.EMPTY;
             }
-        } else if (slot != null && slot.hasItem()) {
+        } else*/ if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
 
             boolean slotUpdated = false;
+            /*
             if (itemstack1.getItem() instanceof ArmorItem) {
                 ArmorItem armor = (ArmorItem) itemstack1.getItem();
                 if (armor.getSlot() == EquipmentSlotType.HEAD && !armorSlots[0].hasItem()) {
@@ -158,7 +161,7 @@ public class CompanionContainer extends Container {
                 offHand.set(itemstack1);
                 offHand.setChanged();
                 slotUpdated = true;
-            }
+            }*/
 
             if (slotUpdated) {
                 slot.set(ItemStack.EMPTY);

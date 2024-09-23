@@ -30,7 +30,7 @@ import net.richardsprojects.lotrcompanions.utils.Constants;
 
 public class CompanionScreen extends ContainerScreen<CompanionContainer> implements IHasContainer<CompanionContainer> {
 
-    private static final ResourceLocation CONTAINER_BACKGROUND = new ResourceLocation(LOTRCompanions.MOD_ID,"textures/inventory.png");
+    private static final ResourceLocation CONTAINER_BACKGROUND = new ResourceLocation(LOTRCompanions.MOD_ID,"textures/companion_menu.png");
     private static final ResourceLocation PATROL_BUTTON = new ResourceLocation(LOTRCompanions.MOD_ID, "textures" +
             "/patrol_button.png");
     private static final ResourceLocation STATIONARY_BUTTON = new ResourceLocation(LOTRCompanions.MOD_ID, "textures" +
@@ -69,12 +69,14 @@ public class CompanionScreen extends ContainerScreen<CompanionContainer> impleme
         this.renderBackground(p_98418_);
         super.render(p_98418_, p_98419_, p_98420_, p_98421_);
 
+        /*
         renderBaseGearSlot(leftPos + 25, topPos + 31, baseGear[0]);
         renderBaseGearSlot(leftPos + 25, topPos + 49, baseGear[1]);
         renderBaseGearSlot(leftPos + 25, topPos + 67, baseGear[2]);
         renderBaseGearSlot(leftPos + 25, topPos + 85, baseGear[3]);
         renderBaseGearSlot(leftPos + 62, topPos + 67, baseGear[4]);
         renderBaseGearSlot(leftPos + 62, topPos + 85, baseGear[5]);
+        */
 
         this.renderTooltip(p_98418_, p_98419_, p_98420_);
     }

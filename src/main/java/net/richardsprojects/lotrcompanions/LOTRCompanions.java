@@ -39,6 +39,9 @@ public class LOTRCompanions {
 
     public static UUID usersUUID = null;
 
+    // TODO: Prevent hired units from targeting players
+    public static final boolean HIRED_UNITS_PARITICIPATE_PVP = false;
+
     public static IEventBus eventBus;
     public LOTRCompanions() {
     	// register Listeners that use the Forge Event Bus

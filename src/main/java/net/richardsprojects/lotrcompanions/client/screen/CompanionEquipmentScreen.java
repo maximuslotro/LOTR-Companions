@@ -9,6 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITargetedTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
@@ -28,8 +30,9 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
 
     private ItemStack[] baseGear;
 
-    public CompanionEquipmentScreen(CompanionEquipmentContainer container, PlayerInventory p_98410_, ExtendedHirableEntity companion) {
-        super(container, p_98410_, companion.getHiredUnitName());
+    public CompanionEquipmentScreen(CompanionEquipmentContainer container, PlayerInventory p_98410_,
+                                    ExtendedHirableEntity companion, ITextComponent title) {
+        super(container, p_98410_, title);
 
         this.companion = companion;
         this.passEvents = false;
@@ -53,8 +56,8 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         renderBaseGearSlot(leftPos + 25, topPos + 49, baseGear[1]);
         renderBaseGearSlot(leftPos + 25, topPos + 67, baseGear[2]);
         renderBaseGearSlot(leftPos + 25, topPos + 85, baseGear[3]);
-        renderBaseGearSlot(leftPos + 62, topPos + 67, baseGear[4]);
-        renderBaseGearSlot(leftPos + 62, topPos + 85, baseGear[5]);
+        renderBaseGearSlot(leftPos + 61 + 18, topPos + 67, baseGear[4]);
+        renderBaseGearSlot(leftPos + 61 + 18, topPos + 85, baseGear[5]);
 
         this.renderTooltip(p_98418_, p_98419_, p_98420_);
     }
@@ -74,32 +77,10 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         this.blit(p_98413_, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
+    @Override
     protected void renderLabels(MatrixStack matrix, int p_230451_2_, int p_230451_3_) {
         this.font.draw(matrix, this.title, (float)this.titleLabelX, (float)this.titleLabelY, 4210752);
         this.font.draw(matrix, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
-
-        StringTextComponent classTitle = new StringTextComponent("Companion:");
-        StringTextComponent healthTitle = new StringTextComponent("Health");
-        StringTextComponent health =
-                new StringTextComponent(df.format(companion.getHiredUnitHealth()) + "/" + (int) companion.getHiredUnitMaxHealth());
-
-        this.font.draw(matrix, classTitle.withStyle(TextFormatting.UNDERLINE), sidebarX, this.titleLabelY + 12,
-                4210752);
-
-        if (companion instanceof HiredGondorSoldier) {
-            this.font.draw(matrix, "Gondor Soldier", sidebarX, this.titleLabelY + 22, 4210752);
-        }
-
-        this.font.draw(matrix, healthTitle.withStyle(TextFormatting.UNDERLINE), sidebarX, this.titleLabelY + 32,
-                4210752);
-        this.font.draw(matrix, health, sidebarX, this.titleLabelY + 42, 4210752);
-
-        this.font.draw(matrix, "Level " + companion.getExpLvl(), sidebarX, this.titleLabelY + 56,
-                4210752);
-        this.font.draw(matrix, "Xp " + companion.getCurrentXp() + "/" + companion.getMaxXp(), sidebarX, this.titleLabelY + 64,
-                4210752);
-        this.font.draw(matrix, "Mob Kills: " + companion.getMobKills(), sidebarX, this.titleLabelY + 73,
-                4210752);
     }
 
     @Override
@@ -119,10 +100,10 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         if (isHovering(25, 85, x, y)) {
             this.renderTooltip(stack, baseGear[3], x, y);
         }
-        if (isHovering(62, 67, x, y)) {
+        if (isHovering(62 + 18, 67, x, y)) {
             this.renderTooltip(stack, baseGear[4], x, y);
         }
-        if (isHovering(62, 85, x, y)) {
+        if (isHovering(62 + 18, 85, x, y)) {
             this.renderTooltip(stack, baseGear[5], x, y);
         }
     }

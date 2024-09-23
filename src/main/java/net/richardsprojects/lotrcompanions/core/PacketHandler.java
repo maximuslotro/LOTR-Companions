@@ -11,6 +11,9 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -83,20 +86,25 @@ public class PacketHandler {
 
             if (entity instanceof HiredGondorSoldier) {
                 HiredGondorSoldier companion = (HiredGondorSoldier) entity;
+                ITextComponent title = new TranslationTextComponent("container.lotrcompanions.equipment",
+                        new StringTextComponent(companion.getPersonalInfo().getName()));
 
                 ClientPlayerEntity clientplayerentity = Minecraft.getInstance().player;
 
                 CompanionEquipmentContainer container = new CompanionEquipmentContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
                 clientplayerentity.containerMenu = container;
-                Minecraft.getInstance().setScreen(new CompanionEquipmentScreen(container, player.inventory, companion));
+                Minecraft.getInstance().setScreen(new CompanionEquipmentScreen(container, player.inventory, companion, title));
             } else if (entity instanceof HiredBreeGuard) {
                 HiredBreeGuard companion = (HiredBreeGuard) entity;
+                companion.getPersonalInfo().getName();
+                ITextComponent title = new TranslationTextComponent("container.lotrcompanions.equipment",
+                        new StringTextComponent(companion.getPersonalInfo().getName()));
 
                 ClientPlayerEntity clientplayerentity = Minecraft.getInstance().player;
 
-                CompanionContainer container = new CompanionContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
+                CompanionEquipmentContainer container = new CompanionEquipmentContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
                 clientplayerentity.containerMenu = container;
-                Minecraft.getInstance().setScreen(new CompanionScreen(container, player.inventory, companion));
+                Minecraft.getInstance().setScreen(new CompanionEquipmentScreen(container, player.inventory, companion, title));
             }
         }
     }

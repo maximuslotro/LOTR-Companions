@@ -41,6 +41,18 @@ public class CompanionEquipmentContainer extends Container {
         this.entityId = entityId;
         companionInv.startOpen(p_39231_.player);
 
+        // add the 3 rows of player inventory
+        for (int l = 0; l < 3; ++l) {
+            for (int j1 = 0; j1 < 9; ++j1) {
+                this.addSlot(new Slot(p_39231_, j1 + l * 9 + 9, 8 + j1 * 18, 142 + l * 18));
+            }
+        }
+
+        // add the player's hotbar
+        for (int i1 = 0; i1 < 9; ++i1) {
+            this.addSlot(new Slot(p_39231_, i1, 8 + i1 * 18, 200));
+        }
+
         // setup 4 custom armor slots
         for(int slot = 9; slot < 13; slot++) {
             final EquipmentSlotType equipmentSlotType = SLOT_IDS[slot - 9];
@@ -64,8 +76,8 @@ public class CompanionEquipmentContainer extends Container {
             });
         }
 
-        mainHand = this.addSlot(new Slot(companionInv, 13,61,64));
-        offHand = this.addSlot(new Slot(companionInv, 14,61,82)  {
+        mainHand = this.addSlot(new Slot(companionInv, 13,62,67));
+        offHand = this.addSlot(new Slot(companionInv, 14,62,85)  {
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(PlayerContainer.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_SHIELD);
             }
