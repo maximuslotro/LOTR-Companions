@@ -9,13 +9,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITargetedTextComponent;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
 import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
-import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
 import net.richardsprojects.lotrcompanions.utils.Constants;
 
 import java.math.RoundingMode;
