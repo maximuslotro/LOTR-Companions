@@ -1,26 +1,19 @@
 package net.richardsprojects.lotrcompanions.container;
 
-import com.mojang.datafixers.util.Pair;
-import lotr.common.item.SpearItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ShieldItem;
-import net.minecraft.item.SwordItem;
-import net.minecraft.util.ResourceLocation;
 
 public class CompanionContainer extends Container {
     private final IInventory container;
     private final int containerRows = 1;
 
     private int entityId;
+
+    private PlayerEntity player;
 /*
     private Slot[] armorSlots = new Slot[4];
     private Slot mainHand;
@@ -36,11 +29,16 @@ public class CompanionContainer extends Container {
 */
     private static final int[] yPos = new int[]{31, 49, 67, 85};
 
+    public PlayerEntity getPlayer() {
+       return player;
+    }
+
     public CompanionContainer(int p_39230_, PlayerInventory p_39231_, IInventory companionInv, int entityId) {
         super(null, p_39230_);
         checkContainerSize(companionInv, companionInv.getContainerSize());
         this.container = companionInv;
         this.entityId = entityId;
+        this.player = p_39231_.player;
         companionInv.startOpen(p_39231_.player);
 
         // add the 9 companion inventory slots

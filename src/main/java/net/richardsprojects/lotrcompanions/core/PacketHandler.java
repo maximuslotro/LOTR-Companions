@@ -17,6 +17,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
@@ -47,7 +48,12 @@ public class PacketHandler {
                 SetStationaryPacket::handle);
         INSTANCE.registerMessage(id++, ReleasePacket.class, ReleasePacket::encode, ReleasePacket::decode,
                 ReleasePacket::handle);
-        INSTANCE.registerMessage(id++, OpenEquipmentPacket.class, OpenEquipmentPacket::encode, OpenEquipmentPacket::decode, OpenEquipmentPacket::handle);
+        INSTANCE.registerMessage(id++, CompanionsServerOpenEquipmentPacket.class, CompanionsServerOpenEquipmentPacket::encode, CompanionsServerOpenEquipmentPacket::decode, CompanionsServerOpenEquipmentPacket::handle);
+        INSTANCE.registerMessage(id++, CompanionsClientOpenEquipmentPacket.class, CompanionsClientOpenEquipmentPacket::encode, CompanionsClientOpenEquipmentPacket::decode, CompanionsClientOpenEquipmentPacket::handle);
+    }
+
+    public static void sendToServer(Object msg) {
+        INSTANCE.send(PacketDistributor.SERVER.noArg(), msg);
     }
 
     @SuppressWarnings("resource")
@@ -79,7 +85,7 @@ public class PacketHandler {
 
     @SuppressWarnings("resource")
     @OnlyIn(Dist.CLIENT)
-    public static void openEquipmentMenu(OpenEquipmentPacket packet) {
+    public static void openEquipmentMenu(CompanionsServerOpenEquipmentPacket packet) {
         PlayerEntity player = Minecraft.getInstance().player;
         if (player != null) {
             Entity entity = player.level.getEntity(packet.getEntityId());

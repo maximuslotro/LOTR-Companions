@@ -6,10 +6,14 @@ import lotr.common.entity.npc.ExtendedHirableEntity;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
 import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
 import net.richardsprojects.lotrcompanions.utils.Constants;
@@ -26,6 +30,8 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
 
     private ItemStack[] baseGear;
 
+    private LivingEntity entity = null;
+
     public CompanionEquipmentScreen(CompanionEquipmentContainer container, PlayerInventory p_98410_,
                                     ExtendedHirableEntity companion, ITextComponent title) {
         super(container, p_98410_, title);
@@ -38,9 +44,13 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         df.setRoundingMode(RoundingMode.CEILING);
         sidebarX = 90;
 
-        Entity entity = p_98410_.player.level.getEntity(container.getEntityId());
+        if (p_98410_.player.level.getEntity(container.getEntityId()) != null) {
+           if (p_98410_.player.level.getEntity(container.getEntityId()) instanceof LivingEntity) {
+               this.entity = (LivingEntity) p_98410_.player.level.getEntity(container.getEntityId());
+           }
+        }
 
-        baseGear = Constants.getBaseGear(entity);
+        if (entity != null) baseGear = Constants.getBaseGear(entity);
     }
 
     @Override
@@ -77,6 +87,14 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
     protected void renderLabels(MatrixStack matrix, int p_230451_2_, int p_230451_3_) {
         this.font.draw(matrix, this.title, (float)this.titleLabelX, (float)this.titleLabelY, 4210752);
         this.font.draw(matrix, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
+
+        // show armor points
+        double armor = 0.0;
+        if (entity.getAttribute(Attributes.ARMOR) != null) {
+            armor = entity.getAttribute(Attributes.ARMOR).getValue();
+        }
+        StringTextComponent armorPoints = new StringTextComponent("Armor Points: " + armor);
+        this.font.draw(matrix, armorPoints, this.titleLabelX + 50, this.titleLabelY + 20, 4210752);
     }
 
     @Override

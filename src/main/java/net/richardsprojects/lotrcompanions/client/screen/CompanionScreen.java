@@ -20,9 +20,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
 import net.richardsprojects.lotrcompanions.container.CompanionContainer;
 import net.richardsprojects.lotrcompanions.core.PacketHandler;
+import net.richardsprojects.lotrcompanions.networking.CompanionsClientOpenEquipmentPacket;
 import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
 import net.richardsprojects.lotrcompanions.networking.SetPatrollingPacket;
 import net.richardsprojects.lotrcompanions.networking.SetStationaryPacket;
@@ -48,6 +50,8 @@ public class CompanionScreen extends ContainerScreen<CompanionContainer> impleme
 
     private ItemStack[] baseGear;
 
+    private Button equipmentButton;
+
     public CompanionScreen(CompanionContainer container, PlayerInventory p_98410_, ExtendedHirableEntity companion) {
         super(container, p_98410_, companion.getHiredUnitName());
 
@@ -68,15 +72,6 @@ public class CompanionScreen extends ContainerScreen<CompanionContainer> impleme
     public void render(MatrixStack p_98418_, int p_98419_, int p_98420_, float p_98421_) {
         this.renderBackground(p_98418_);
         super.render(p_98418_, p_98419_, p_98420_, p_98421_);
-
-        /*
-        renderBaseGearSlot(leftPos + 25, topPos + 31, baseGear[0]);
-        renderBaseGearSlot(leftPos + 25, topPos + 49, baseGear[1]);
-        renderBaseGearSlot(leftPos + 25, topPos + 67, baseGear[2]);
-        renderBaseGearSlot(leftPos + 25, topPos + 85, baseGear[3]);
-        renderBaseGearSlot(leftPos + 62, topPos + 67, baseGear[4]);
-        renderBaseGearSlot(leftPos + 62, topPos + 85, baseGear[5]);
-        */
 
         this.renderTooltip(p_98418_, p_98419_, p_98420_);
     }
@@ -104,6 +99,12 @@ public class CompanionScreen extends ContainerScreen<CompanionContainer> impleme
                     PacketHandler.INSTANCE.sendToServer(new SetStationaryPacket(companion.getHiredUnitId()));
                 })
         );
+
+        equipmentButton = this.addButton(new Button(this.leftPos + 8, this.topPos + 18, 57, 20,  new TranslationTextComponent("gui.lotrextended.menu.equipment"), button -> openEquipmentMenu()));
+    }
+
+    private void openEquipmentMenu() {
+        PacketHandler.sendToServer(new CompanionsClientOpenEquipmentPacket(menu.getEntityId()));
     }
 
     @SuppressWarnings("deprecation")

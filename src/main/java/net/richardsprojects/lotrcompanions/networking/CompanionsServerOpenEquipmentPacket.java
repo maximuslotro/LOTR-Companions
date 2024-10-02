@@ -6,22 +6,22 @@ import net.richardsprojects.lotrcompanions.core.PacketHandler;
 
 import java.util.function.Supplier;
 
-public class OpenEquipmentPacket {
+public class CompanionsServerOpenEquipmentPacket {
     private final int id;
     private final int size;
     private final int entityId;
 
-    public OpenEquipmentPacket(int id, int size, int entityId) {
+    public CompanionsServerOpenEquipmentPacket(int id, int size, int entityId) {
         this.id = id;
         this.size = size;
         this.entityId = entityId;
     }
 
-    public static OpenEquipmentPacket decode(PacketBuffer buf) {
-        return new OpenEquipmentPacket(buf.readUnsignedByte(), buf.readVarInt(), buf.readInt());
+    public static CompanionsServerOpenEquipmentPacket decode(PacketBuffer buf) {
+        return new CompanionsServerOpenEquipmentPacket(buf.readUnsignedByte(), buf.readVarInt(), buf.readInt());
     }
 
-    public static void encode(OpenEquipmentPacket msg, PacketBuffer buf) {
+    public static void encode(CompanionsServerOpenEquipmentPacket msg, PacketBuffer buf) {
         buf.writeByte(msg.id);
         buf.writeVarInt(msg.size);
         buf.writeInt(msg.entityId);
@@ -35,7 +35,7 @@ public class OpenEquipmentPacket {
         return this.entityId;
     }
 
-    public static void handle(OpenEquipmentPacket msg, Supplier<NetworkEvent.Context> context) {
+    public static void handle(CompanionsServerOpenEquipmentPacket msg, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             PacketHandler.openEquipmentMenu(msg);
         });
