@@ -1,5 +1,6 @@
 package net.richardsprojects.lotrcompanions.networking;
 
+import com.github.maximuslotro.lotrrextended.ExtendedLog;
 import lotr.common.entity.npc.NPCEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;

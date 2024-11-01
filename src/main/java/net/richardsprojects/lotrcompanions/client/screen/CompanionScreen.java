@@ -104,7 +104,7 @@ public class CompanionScreen extends ContainerScreen<CompanionContainer> impleme
     }
 
     private void openEquipmentMenu() {
-        PacketHandler.sendToServer(new CompanionsClientOpenEquipmentPacket(menu.getEntityId()));
+        PacketHandler.sendToServer(new CompanionsClientOpenEquipmentPacket(companion.getHiredUnitId()));
     }
 
     @SuppressWarnings("deprecation")

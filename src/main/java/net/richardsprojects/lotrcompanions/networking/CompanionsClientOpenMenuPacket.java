@@ -9,11 +9,11 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.richardsprojects.lotrcompanions.container.CompanionContainer;
-import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
 import net.richardsprojects.lotrcompanions.core.PacketHandler;
 import net.richardsprojects.lotrcompanions.npcs.HiredBreeGuard;
 import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class CompanionsClientOpenMenuPacket {
@@ -41,7 +41,7 @@ public class CompanionsClientOpenMenuPacket {
 
     public static void handle(CompanionsClientOpenMenuPacket msg, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            CompanionsClientOpenMenuPacket.processPacket(context.get().getSender(), msg);
+            CompanionsClientOpenMenuPacket.processPacket(Objects.requireNonNull(context.get().getSender()), msg);
         });
 
         context.get().setPacketHandled(true);
@@ -57,11 +57,11 @@ public class CompanionsClientOpenMenuPacket {
         if (player.level.getEntity(msg.getEntityId()) instanceof NPCEntity) {
            NPCEntity npcEntity = (NPCEntity) player.level.getEntity(msg.getEntityId());
            if (npcEntity instanceof HiredBreeGuard) {
-               ((HiredBreeGuard) npcEntity).setInventoryOpen(false);
+               ((HiredBreeGuard) npcEntity).setInventoryOpen(true);
                companionInventory = ((HiredBreeGuard) npcEntity).inventory;
            }
             if (npcEntity instanceof HiredGondorSoldier) {
-                ((HiredGondorSoldier) npcEntity).setInventoryOpen(false);
+                ((HiredGondorSoldier) npcEntity).setInventoryOpen(true);
                 companionInventory = ((HiredGondorSoldier) npcEntity).inventory;
             }
         }
