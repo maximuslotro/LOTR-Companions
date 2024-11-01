@@ -1,11 +1,13 @@
 package net.richardsprojects.lotrcompanions.container;
 
+import com.github.maximuslotro.lotrrextended.ExtendedLog;
 import com.mojang.datafixers.util.Pair;
 import lotr.common.item.SpearItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.inventory.container.Slot;
@@ -14,6 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.util.ResourceLocation;
+import net.richardsprojects.lotrcompanions.npcs.HiredBreeGuard;
+import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
+
+import java.util.Objects;
 
 public class CompanionEquipmentContainer extends Container {
 
@@ -35,11 +41,23 @@ public class CompanionEquipmentContainer extends Container {
 
     private static final int[] yPos = new int[]{31, 49, 67, 85};
 
+    private PlayerEntity player;
+
+    Inventory compInventory;
+
     public CompanionEquipmentContainer(int p_39230_, PlayerInventory p_39231_, IInventory companionInv, int entityId) {
         super(null, p_39230_);
         this.container = companionInv;
         this.entityId = entityId;
         companionInv.startOpen(p_39231_.player);
+        player = p_39231_.player;
+
+        if (player.level.getEntity(entityId) instanceof HiredBreeGuard) {
+            compInventory = ((HiredBreeGuard) Objects.requireNonNull(player.level.getEntity(entityId))).inventory;
+        }
+        if (player.level.getEntity(entityId) instanceof HiredGondorSoldier) {
+            compInventory = ((HiredGondorSoldier) Objects.requireNonNull(player.level.getEntity(entityId))).inventory;
+        }
 
         // add the 3 rows of player inventory
         for (int l = 0; l < 3; ++l) {
@@ -122,18 +140,37 @@ public class CompanionEquipmentContainer extends Container {
                 if (armor.getSlot() == EquipmentSlotType.HEAD && !armorSlots[0].hasItem()) {
                     armorSlots[0].set(itemstack1);
                     armorSlots[0].setChanged();
+                    compInventory.setItem(9, itemstack1);
+                    compInventory.setChanged();
+                    System.out.println(itemstack1 + " compInventory updated");
+                    System.out.println("compInventory: " + compInventory.getItem(9));
                     slotUpdated = true;
                 } else if (armor.getSlot() == EquipmentSlotType.CHEST && !armorSlots[1].hasItem()) {
                     armorSlots[1].set(itemstack1);
                     armorSlots[1].setChanged();
+                    compInventory.setItem(10, itemstack1);
+                    compInventory.setChanged();
+                    System.out.println(itemstack1 + " compInventory updated");
+                    System.out.println("compInventory: " + compInventory.getItem(10));
                     slotUpdated = true;
                 } else if (armor.getSlot() == EquipmentSlotType.LEGS && !armorSlots[2].hasItem()) {
                     armorSlots[2].set(itemstack1);
                     armorSlots[2].setChanged();
+                    compInventory.setItem(11, itemstack1);
+                    compInventory.setChanged();
+                    System.out.println(itemstack1 + " compInventory updated");
+                    System.out.println("compInventory: " + compInventory.getItem(11));
                     slotUpdated = true;
                 } else if (armor.getSlot() == EquipmentSlotType.FEET && !armorSlots[3].hasItem()) {
                     armorSlots[3].set(itemstack1);
                     armorSlots[3].setChanged();
+                    compInventory.setItem(12, itemstack1);
+                    compInventory.setChanged();
+                    // TODO: For some reason this code gets run on main but not server thread
+                    // TODO: Compare on branch that works
+                    // TODO: Try adding an additional DataParameter that the client updates and then the server reads every tick and updates from there?
+                    ExtendedLog.info(itemstack1 + " compInventory updated");
+                    ExtendedLog.info("compInventory: " + compInventory.getItem(12));
                     slotUpdated = true;
                 }
             }
@@ -141,18 +178,27 @@ public class CompanionEquipmentContainer extends Container {
             if (itemstack1.getItem() instanceof SwordItem || itemstack1.getItem() instanceof SpearItem) {
                 mainHand.set(itemstack1);
                 mainHand.setChanged();
+                compInventory.setItem(13, itemstack1);
+                compInventory.setChanged();
+                System.out.println(itemstack1 + " compInventory updated");
+                System.out.println("compInventory: " + compInventory.getItem(13));
                 slotUpdated = true;
             }
 
             if (itemstack1.getItem() instanceof ShieldItem) {
                 offHand.set(itemstack1);
                 offHand.setChanged();
+                compInventory.setItem(14, itemstack1);
+                compInventory.setChanged();
+                System.out.println(itemstack1 + " compInventory updated");
+                System.out.println("compInventory: " + compInventory.getItem(14));
                 slotUpdated = true;
             }
 
             if (slotUpdated) {
                 slot.set(ItemStack.EMPTY);
                 slot.setChanged();
+                player.inventory.setItem(slot.index, ItemStack.EMPTY);
                 return ItemStack.EMPTY;
             }
 
@@ -164,6 +210,12 @@ public class CompanionEquipmentContainer extends Container {
         }
 
         return itemstack;
+    }
+
+    @Override
+    public void removed(PlayerEntity p_39251_) {
+        super.removed(p_39251_);
+        this.container.stopOpen(p_39251_);
     }
 
     public int getEntityId() {

@@ -8,5 +8,6 @@
   "item.lotrcompanions.hired_gondor_soldier_spawn_egg": "Hired Gondor Soldier Spawn Egg",
   "item.lotrcompanions.hired_bree_guard_spawn_egg": "Hired Bree-land Guard Spawn Egg",
   "notification.hired_companion_died": "Your hired companion %1$s has died.",
-  "gui.lotrextended.menu.equipment": "Equipment"
+  "gui.lotrextended.menu.equipment": "Equipment",
+  "gui.lotrextended.menu.back": "Back"
 }

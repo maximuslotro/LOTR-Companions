@@ -1,24 +1,17 @@
 package net.richardsprojects.lotrcompanions.eventhandlers;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import lotr.common.entity.npc.*;
 import lotr.common.entity.npc.data.NPCEntitySettings;
 import lotr.common.entity.npc.data.NPCEntitySettingsManager;
 import lotr.common.init.ExtendedItems;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.client.event.RenderNameplateEvent;
 import net.minecraftforge.event.entity.living.EntityTeleportEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -26,15 +19,13 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.richardsprojects.lotrcompanions.client.render.CompanionHpBar;
 import net.richardsprojects.lotrcompanions.container.CompanionContainer;
+import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
 import net.richardsprojects.lotrcompanions.npcs.*;
 import net.richardsprojects.lotrcompanions.utils.CoinUtils;
 import net.richardsprojects.lotrcompanions.utils.TeleportHelper;
 
 import java.util.*;
-
-import static net.minecraftforge.client.ForgeHooksClient.isNameplateInRenderDistance;
 
 /**
  * For {@link net.minecraftforge.eventbus.api.Event} that are fired on the MinecraftForge.EVENT_BUS
@@ -60,14 +51,19 @@ public class ForgeEntityEvents {
 
     @SubscribeEvent
     public static void playerCloseInventory(final PlayerContainerEvent.Close event) {
-        if (!(event.getContainer() instanceof CompanionContainer)) {
+        if (!((event.getContainer() instanceof CompanionContainer) ||
+                (event.getContainer() instanceof CompanionEquipmentContainer))) {
             return;
         }
 
-        CompanionContainer companionContainer = (CompanionContainer) event.getContainer();
+        Entity entity;
+        if (event.getContainer() instanceof CompanionContainer) {
+            entity = event.getPlayer().level.getEntity(((CompanionContainer) event.getContainer()).getEntityId());
+        } else {
+            entity = event.getPlayer().level.getEntity(((CompanionEquipmentContainer) event.getContainer()).getEntityId());
+        }
 
         // make companion no longer stationary
-        Entity entity = event.getPlayer().level.getEntity(companionContainer.getEntityId());
         if (entity instanceof HiredGondorSoldier) {
             ((HiredGondorSoldier) entity).setInventoryOpen(false);
         } else if (entity instanceof HiredBreeGuard) {

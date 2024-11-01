@@ -50,6 +50,7 @@ public class PacketHandler {
                 ReleasePacket::handle);
         INSTANCE.registerMessage(id++, CompanionsServerOpenEquipmentPacket.class, CompanionsServerOpenEquipmentPacket::encode, CompanionsServerOpenEquipmentPacket::decode, CompanionsServerOpenEquipmentPacket::handle);
         INSTANCE.registerMessage(id++, CompanionsClientOpenEquipmentPacket.class, CompanionsClientOpenEquipmentPacket::encode, CompanionsClientOpenEquipmentPacket::decode, CompanionsClientOpenEquipmentPacket::handle);
+        INSTANCE.registerMessage(id++, CompanionsClientOpenMenuPacket.class, CompanionsClientOpenMenuPacket::encode, CompanionsClientOpenMenuPacket::decode, CompanionsClientOpenMenuPacket::handle);
     }
 
     public static void sendToServer(Object msg) {

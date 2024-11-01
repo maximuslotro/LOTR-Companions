@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import lotr.common.entity.npc.ExtendedHirableEntity;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,15 +13,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
 import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
+import net.richardsprojects.lotrcompanions.core.PacketHandler;
+import net.richardsprojects.lotrcompanions.networking.CompanionsClientOpenMenuPacket;
 import net.richardsprojects.lotrcompanions.utils.Constants;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipmentContainer> implements IHasContainer<CompanionEquipmentContainer> {
+
+    private Button backButton;
 
     private static final ResourceLocation CONTAINER_BACKGROUND = new ResourceLocation(LOTRCompanions.MOD_ID,"textures/upgrade_equipment_menu.png");
     private final ExtendedHirableEntity companion;
@@ -72,6 +76,8 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         super.init();
         this.leftPos = (this.width - this.imageWidth) / 2;
         this.topPos = (this.height - this.imageHeight) / 2;
+
+        backButton = this.addButton(new Button(this.leftPos + 7, this.topPos + 105, 57, 20,  new TranslationTextComponent("gui.lotrextended.menu.back"), button -> openMainMenu()));
     }
 
     @SuppressWarnings("deprecation")
@@ -93,8 +99,8 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         if (entity.getAttribute(Attributes.ARMOR) != null) {
             armor = entity.getAttribute(Attributes.ARMOR).getValue();
         }
-        StringTextComponent armorPoints = new StringTextComponent("Armor Points: " + armor);
-        this.font.draw(matrix, armorPoints, this.titleLabelX + 50, this.titleLabelY + 20, 4210752);
+        StringTextComponent armorPoints = new StringTextComponent("Armor: " + armor);
+        this.font.draw(matrix, armorPoints, this.sidebarX, this.titleLabelY + 20, 4210752);
     }
 
     @Override
@@ -120,6 +126,10 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         if (isHovering(62 + 18, 85, x, y)) {
             this.renderTooltip(stack, baseGear[5], x, y);
         }
+    }
+
+    private void openMainMenu() {
+        PacketHandler.sendToServer(new CompanionsClientOpenMenuPacket(menu.getEntityId()));
     }
 
     private void renderBaseGearSlot(int slotX, int slotY, ItemStack item) {
