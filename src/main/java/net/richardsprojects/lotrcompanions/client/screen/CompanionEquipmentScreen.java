@@ -2,7 +2,6 @@ package net.richardsprojects.lotrcompanions.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import lotr.common.entity.npc.ExtendedHirableEntity;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -22,25 +21,23 @@ import net.richardsprojects.lotrcompanions.utils.Constants;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipmentContainer> implements IHasContainer<CompanionEquipmentContainer> {
 
     private Button backButton;
 
     private static final ResourceLocation CONTAINER_BACKGROUND = new ResourceLocation(LOTRCompanions.MOD_ID,"textures/upgrade_equipment_menu.png");
-    private final ExtendedHirableEntity companion;
     DecimalFormat df = new DecimalFormat("#.#");
     int sidebarX;
 
-    private ItemStack[] baseGear;
+    private ItemStack[] baseGear = null;
 
     private LivingEntity entity = null;
 
-    public CompanionEquipmentScreen(CompanionEquipmentContainer container, PlayerInventory p_98410_,
-                                    ExtendedHirableEntity companion, ITextComponent title) {
+    public CompanionEquipmentScreen(CompanionEquipmentContainer container, PlayerInventory p_98410_, ITextComponent title) {
         super(container, p_98410_, title);
 
-        this.companion = companion;
         this.passEvents = false;
         this.imageHeight = 256;
         this.inventoryLabelY = 130;
@@ -62,12 +59,14 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         this.renderBackground(p_98418_);
         super.render(p_98418_, p_98419_, p_98420_, p_98421_);
 
-        renderBaseGearSlot(leftPos + 25, topPos + 31, baseGear[0]);
-        renderBaseGearSlot(leftPos + 25, topPos + 49, baseGear[1]);
-        renderBaseGearSlot(leftPos + 25, topPos + 67, baseGear[2]);
-        renderBaseGearSlot(leftPos + 25, topPos + 85, baseGear[3]);
-        renderBaseGearSlot(leftPos + 61 + 18, topPos + 67, baseGear[4]);
-        renderBaseGearSlot(leftPos + 61 + 18, topPos + 85, baseGear[5]);
+        if (baseGear != null) {
+            renderBaseGearSlot(leftPos + 25, topPos + 31, baseGear[0]);
+            renderBaseGearSlot(leftPos + 25, topPos + 49, baseGear[1]);
+            renderBaseGearSlot(leftPos + 25, topPos + 67, baseGear[2]);
+            renderBaseGearSlot(leftPos + 25, topPos + 85, baseGear[3]);
+            renderBaseGearSlot(leftPos + 61 + 18, topPos + 67, baseGear[4]);
+            renderBaseGearSlot(leftPos + 61 + 18, topPos + 85, baseGear[5]);
+        }
 
         this.renderTooltip(p_98418_, p_98419_, p_98420_);
     }
@@ -95,12 +94,14 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         this.font.draw(matrix, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
 
         // show armor points
-        double armor = 0.0;
-        if (entity.getAttribute(Attributes.ARMOR) != null) {
-            armor = entity.getAttribute(Attributes.ARMOR).getValue();
+        if (this.entity != null) {
+            double armor = 0.0;
+            if (entity.getAttribute(Attributes.ARMOR) != null) {
+                armor = Objects.requireNonNull(entity.getAttribute(Attributes.ARMOR)).getValue();
+            }
+            StringTextComponent armorPoints = new StringTextComponent("Armor: " + armor);
+            this.font.draw(matrix, armorPoints, this.sidebarX, this.titleLabelY + 20, 4210752);
         }
-        StringTextComponent armorPoints = new StringTextComponent("Armor: " + armor);
-        this.font.draw(matrix, armorPoints, this.sidebarX, this.titleLabelY + 20, 4210752);
     }
 
     @Override

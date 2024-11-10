@@ -138,6 +138,22 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         this.setTame(false);
     }
 
+    public void updateFeetSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_FEET, stack);
+    }
+
+    public void updateHeadSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_HEAD, stack);
+    }
+
+    public void updateChestSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_CHEST, stack);
+    }
+
+    public void updateLegsSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_LEGS, stack);
+    }
+
     public Inventory getCustomInventory() {
         return inventory;
     }

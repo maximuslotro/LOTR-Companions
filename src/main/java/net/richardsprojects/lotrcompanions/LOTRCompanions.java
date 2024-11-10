@@ -1,5 +1,6 @@
 package net.richardsprojects.lotrcompanions;
 
+import com.github.maximuslotro.lotrrextended.ExtendedLog;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -10,9 +11,11 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.richardsprojects.lotrcompanions.client.ContainerScreenHelper;
 import net.richardsprojects.lotrcompanions.client.eventhandlers.RenderHealthbars;
 import net.richardsprojects.lotrcompanions.client.render.HiredBreeGuardRenderer;
 import net.richardsprojects.lotrcompanions.client.render.HiredGondorSoldierRenderer;
+import net.richardsprojects.lotrcompanions.container.CompanionsContainers;
 import net.richardsprojects.lotrcompanions.core.PacketHandler;
 import net.richardsprojects.lotrcompanions.eventhandlers.LOTRFastTravelEventHandler;
 import net.richardsprojects.lotrcompanions.npcs.LOTRCNpcs;
@@ -54,10 +57,17 @@ public class LOTRCompanions {
         LOTRCItems.ITEMS.register(eventBus);
         eventBus.register(this);
 
+        CompanionsContainers.register();
+        eventBus.addListener(this::registerScreens);
+
         // register client event handlers only on clients
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> this::setupClient);
 
         PacketHandler.register();
+    }
+
+    private void registerScreens(final FMLClientSetupEvent event) {
+        ContainerScreenHelper.registerScreens();
     }
 
     private void setupClient() {

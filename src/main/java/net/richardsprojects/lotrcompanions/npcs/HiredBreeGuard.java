@@ -107,11 +107,35 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         entityData.set(EQUIPMENT_HEAD, baseGear[0]);
         entityData.set(EQUIPMENT_CHEST, baseGear[1]);
         entityData.set(EQUIPMENT_LEGS, baseGear[2]);
-        entityData.set(EQUIPMENT_FEET, baseGear[3]);
+        entityData.set(EQUIPMENT_FEET, ItemStack.EMPTY);
         entityData.set(EQUIPMENT_MAINHAND, baseGear[4]);
         entityData.set(EQUIPMENT_OFFHAND, baseGear[5]);
 
         this.setTame(false);
+    }
+
+    public void updateFeetSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_FEET, stack);
+    }
+
+    public void updateHeadSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_HEAD, stack);
+    }
+
+    public void updateChestSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_CHEST, stack);
+    }
+
+    public void updateLegsSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_LEGS, stack);
+    }
+
+    public void updateMainhandSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_MAINHAND, stack);
+    }
+
+    public void updateOffhandSlot(ItemStack stack) {
+        entityData.set(EQUIPMENT_OFFHAND, stack);
     }
 
     /* Remove consuming goals since we have our own */
@@ -449,7 +473,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
             }
         }
 
-        updateEquipment();
+        initializeEquipmentServerSide();
 
         if (tag.contains("following")) {
             this.setFollowing(tag.getBoolean("following"));
@@ -490,7 +514,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         }
 
         checkStats();
-        updateEquipment();
+        synchronizeEquipment();
 
         if (tmpHealthLoaded && !healthUpdateFromTmpHealth) {
             this.setHealth(getTmpLastHealth());
@@ -515,7 +539,11 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         }
     }
 
-    public void updateEquipment() {
+    /**
+     * This method should only run once after the inventory has been read from
+     * NBT data and then it uses the level information to only run on the server
+     */
+    public void initializeEquipmentServerSide() {
         // only on server side update entityData to match inventory
         if (!level.isClientSide) {
             if (inventory.getItem(9).isEmpty()) {
@@ -557,6 +585,55 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         setItemSlot(EquipmentSlotType.FEET, entityData.get(EQUIPMENT_FEET));
         setItemSlot(EquipmentSlotType.OFFHAND, entityData.get(EQUIPMENT_OFFHAND));
         setItemSlot(EquipmentSlotType.MAINHAND, entityData.get(EQUIPMENT_MAINHAND));
+    }
+
+    /**
+     * This method can be run every tick from both client and server to synchronize
+     * equipment
+     */
+    public void synchronizeEquipment() {
+        // only on server side update entityData to match inventory
+        if (entityData.get(EQUIPMENT_HEAD).isEmpty()) {
+            setItemSlot(EquipmentSlotType.HEAD, baseGear[0]);
+        } else {
+            setItemSlot(EquipmentSlotType.HEAD, entityData.get(EQUIPMENT_HEAD));
+            inventory.setItem(9, entityData.get(EQUIPMENT_HEAD));
+        }
+
+        if (entityData.get(EQUIPMENT_CHEST).isEmpty()) {
+            setItemSlot(EquipmentSlotType.FEET, baseGear[1]);
+        } else {
+            setItemSlot(EquipmentSlotType.CHEST, entityData.get(EQUIPMENT_CHEST));
+            inventory.setItem(10, entityData.get(EQUIPMENT_CHEST));
+        }
+
+        if (entityData.get(EQUIPMENT_LEGS).isEmpty()) {
+            setItemSlot(EquipmentSlotType.LEGS, baseGear[2]);
+        } else {
+            setItemSlot(EquipmentSlotType.LEGS, entityData.get(EQUIPMENT_LEGS));
+            inventory.setItem(11, entityData.get(EQUIPMENT_LEGS));
+        }
+
+        if (entityData.get(EQUIPMENT_FEET).isEmpty()) {
+            setItemSlot(EquipmentSlotType.FEET, baseGear[3]);
+        } else {
+            setItemSlot(EquipmentSlotType.FEET, entityData.get(EQUIPMENT_FEET));
+            inventory.setItem(12, entityData.get(EQUIPMENT_FEET));
+        }
+
+        if (entityData.get(EQUIPMENT_MAINHAND).isEmpty()) {
+            setItemSlot(EquipmentSlotType.MAINHAND, baseGear[4]);
+        } else {
+            setItemSlot(EquipmentSlotType.MAINHAND, entityData.get(EQUIPMENT_MAINHAND));
+            inventory.setItem(13, entityData.get(EQUIPMENT_MAINHAND));
+        }
+
+        if (entityData.get(EQUIPMENT_OFFHAND).isEmpty()) {
+            setItemSlot(EquipmentSlotType.OFFHAND, baseGear[5]);
+        } else {
+            setItemSlot(EquipmentSlotType.OFFHAND, entityData.get(EQUIPMENT_OFFHAND));
+            inventory.setItem(14, entityData.get(EQUIPMENT_OFFHAND));
+        }
     }
 
     public void modifyMaxHealth(int change, String name, boolean permanent) {

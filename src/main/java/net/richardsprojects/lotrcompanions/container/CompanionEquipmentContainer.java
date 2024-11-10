@@ -2,11 +2,11 @@ package net.richardsprojects.lotrcompanions.container;
 
 import com.github.maximuslotro.lotrrextended.ExtendedLog;
 import com.mojang.datafixers.util.Pair;
+import lotr.common.entity.npc.NPCEntity;
 import lotr.common.item.SpearItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -15,15 +15,19 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.item.SwordItem;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.richardsprojects.lotrcompanions.npcs.HiredBreeGuard;
-import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.richardsprojects.lotrcompanions.npcs.HiredUnitHelper;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompanionEquipmentContainer extends Container {
-
-    private final IInventory container;
 
     private Slot[] armorSlots = new Slot[4];
     private Slot mainHand;
@@ -41,40 +45,63 @@ public class CompanionEquipmentContainer extends Container {
 
     private static final int[] yPos = new int[]{31, 49, 67, 85};
 
+    private NPCEntity companion;
+
     private PlayerEntity player;
 
-    Inventory compInventory;
+    private final World level;
 
-    public CompanionEquipmentContainer(int p_39230_, PlayerInventory p_39231_, IInventory companionInv, int entityId) {
-        super(null, p_39230_);
-        this.container = companionInv;
-        this.entityId = entityId;
-        companionInv.startOpen(p_39231_.player);
-        player = p_39231_.player;
+    public static final ITextComponent CONTAINER_TITLE = new TranslationTextComponent("container.lotrcompanions.equipment");
 
-        if (player.level.getEntity(entityId) instanceof HiredBreeGuard) {
-            compInventory = ((HiredBreeGuard) Objects.requireNonNull(player.level.getEntity(entityId))).inventory;
+    Inventory tempInventory;
+
+
+    public CompanionEquipmentContainer(int p_39230_, PlayerInventory playerInventory, PacketBuffer extraData) {
+        super(CompanionsContainers.COMPANION_EQUIPMENT_CONTAINER.get(), p_39230_);
+
+        // read in packet data
+        CompoundNBT nbt = extraData.readAnySizeNbt();
+        this.entityId = nbt.getInt("entityId");
+
+        // read equipment from NBT
+        List<ItemStack> items = new ArrayList<>();
+        ListNBT list = nbt.getList("equipment", 10);
+        for (int i = 0; i < list.size(); i++) {
+            CompoundNBT node = list.getCompound(i);
+            if (node != null) {
+                ItemStack item = ItemStack.of(node.getCompound("item"));
+                items.add(item);
+            }
         }
-        if (player.level.getEntity(entityId) instanceof HiredGondorSoldier) {
-            compInventory = ((HiredGondorSoldier) Objects.requireNonNull(player.level.getEntity(entityId))).inventory;
+
+        // setup initial inventory
+        ItemStack[] equipment = items.toArray(new ItemStack[items.size()]);
+        tempInventory = new Inventory(6);
+        for (int i = 0; i < equipment.length && i < 6; i++) {
+            tempInventory.setItem(i, equipment[i]);
         }
+
+        player = playerInventory.player;
+        this.level = player.level;
+        this.companion = (NPCEntity) this.level.getEntity(entityId);
+
 
         // add the 3 rows of player inventory
         for (int l = 0; l < 3; ++l) {
             for (int j1 = 0; j1 < 9; ++j1) {
-                this.addSlot(new Slot(p_39231_, j1 + l * 9 + 9, 8 + j1 * 18, 142 + l * 18));
+                this.addSlot(new Slot(playerInventory, j1 + l * 9 + 9, 8 + j1 * 18, 142 + l * 18));
             }
         }
 
         // add the player's hotbar
         for (int i1 = 0; i1 < 9; ++i1) {
-            this.addSlot(new Slot(p_39231_, i1, 8 + i1 * 18, 200));
+            this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 200));
         }
 
         // setup 4 custom armor slots
         for(int slot = 9; slot < 13; slot++) {
             final EquipmentSlotType equipmentSlotType = SLOT_IDS[slot - 9];
-            armorSlots[slot - 9] = this.addSlot(new Slot(companionInv, slot, 8, yPos[slot - 9]) {
+            armorSlots[slot - 9] = this.addSlot(new Slot(tempInventory, slot - 9, 8, yPos[slot - 9]) {
                 public int getMaxStackSize() {
                     return 1;
                 }
@@ -94,17 +121,12 @@ public class CompanionEquipmentContainer extends Container {
             });
         }
 
-        mainHand = this.addSlot(new Slot(companionInv, 13,62,67));
-        offHand = this.addSlot(new Slot(companionInv, 14,62,85)  {
+        mainHand = this.addSlot(new Slot(tempInventory, 13 - 9,62,67));
+        offHand = this.addSlot(new Slot(tempInventory, 14 - 9,62,85)  {
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(PlayerContainer.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_SHIELD);
             }
         });
-    }
-
-    @Override
-    public boolean stillValid(PlayerEntity player) {
-        return this.container.stillValid(player);
     }
 
     @Override
@@ -118,6 +140,7 @@ public class CompanionEquipmentContainer extends Container {
                 player.addItem(slot.getItem());
                 mainHand.set(ItemStack.EMPTY);
                 mainHand.setChanged();
+                HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
             } else {
                 return ItemStack.EMPTY;
             }
@@ -127,9 +150,13 @@ public class CompanionEquipmentContainer extends Container {
                 player.addItem(slot.getItem());
                 offHand.set(ItemStack.EMPTY);
                 offHand.setChanged();
+                HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.OFFHAND, ItemStack.EMPTY);
             } else {
                 return ItemStack.EMPTY;
             }
+            // TODO: Write if statements for handling the other 4 gear types to fix a crash
+            // TODO: Fix bug where shift-clicking items out doesn't actually remove them from the inventory the next time
+            // TODO: Fix where moving an item around prevents it from syncing - can probably do this with slot listeners?
         } else if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
@@ -140,37 +167,22 @@ public class CompanionEquipmentContainer extends Container {
                 if (armor.getSlot() == EquipmentSlotType.HEAD && !armorSlots[0].hasItem()) {
                     armorSlots[0].set(itemstack1);
                     armorSlots[0].setChanged();
-                    compInventory.setItem(9, itemstack1);
-                    compInventory.setChanged();
-                    System.out.println(itemstack1 + " compInventory updated");
-                    System.out.println("compInventory: " + compInventory.getItem(9));
+                    HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.HEAD, itemstack1);
                     slotUpdated = true;
                 } else if (armor.getSlot() == EquipmentSlotType.CHEST && !armorSlots[1].hasItem()) {
                     armorSlots[1].set(itemstack1);
                     armorSlots[1].setChanged();
-                    compInventory.setItem(10, itemstack1);
-                    compInventory.setChanged();
-                    System.out.println(itemstack1 + " compInventory updated");
-                    System.out.println("compInventory: " + compInventory.getItem(10));
+                    HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.CHEST, itemstack1);
                     slotUpdated = true;
                 } else if (armor.getSlot() == EquipmentSlotType.LEGS && !armorSlots[2].hasItem()) {
                     armorSlots[2].set(itemstack1);
                     armorSlots[2].setChanged();
-                    compInventory.setItem(11, itemstack1);
-                    compInventory.setChanged();
-                    System.out.println(itemstack1 + " compInventory updated");
-                    System.out.println("compInventory: " + compInventory.getItem(11));
+                    HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.LEGS, itemstack1);
                     slotUpdated = true;
                 } else if (armor.getSlot() == EquipmentSlotType.FEET && !armorSlots[3].hasItem()) {
                     armorSlots[3].set(itemstack1);
                     armorSlots[3].setChanged();
-                    compInventory.setItem(12, itemstack1);
-                    compInventory.setChanged();
-                    // TODO: For some reason this code gets run on main but not server thread
-                    // TODO: Compare on branch that works
-                    // TODO: Try adding an additional DataParameter that the client updates and then the server reads every tick and updates from there?
-                    ExtendedLog.info(itemstack1 + " compInventory updated");
-                    ExtendedLog.info("compInventory: " + compInventory.getItem(12));
+                    HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.FEET, itemstack1);
                     slotUpdated = true;
                 }
             }
@@ -178,20 +190,14 @@ public class CompanionEquipmentContainer extends Container {
             if (itemstack1.getItem() instanceof SwordItem || itemstack1.getItem() instanceof SpearItem) {
                 mainHand.set(itemstack1);
                 mainHand.setChanged();
-                compInventory.setItem(13, itemstack1);
-                compInventory.setChanged();
-                System.out.println(itemstack1 + " compInventory updated");
-                System.out.println("compInventory: " + compInventory.getItem(13));
+                HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.MAINHAND, itemstack1);
                 slotUpdated = true;
             }
 
             if (itemstack1.getItem() instanceof ShieldItem) {
                 offHand.set(itemstack1);
                 offHand.setChanged();
-                compInventory.setItem(14, itemstack1);
-                compInventory.setChanged();
-                System.out.println(itemstack1 + " compInventory updated");
-                System.out.println("compInventory: " + compInventory.getItem(14));
+                HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.OFFHAND, itemstack1);
                 slotUpdated = true;
             }
 
@@ -213,13 +219,32 @@ public class CompanionEquipmentContainer extends Container {
     }
 
     @Override
-    public void removed(PlayerEntity p_39251_) {
-        super.removed(p_39251_);
-        this.container.stopOpen(p_39251_);
+    public boolean stillValid(PlayerEntity p_75145_1_) {
+        return true;
     }
 
     public int getEntityId() {
         return entityId;
+    }
+
+    public static void writeContainerInitData(PacketBuffer extraData, int entityId, List<ItemStack> equipment) {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putInt("entityId", entityId); // write the entity Id
+
+        // write their equipment including empty slots
+        ListNBT listnbt = new ListNBT();
+        for (int i = 0; i < 6; i++) {
+            ItemStack stack = equipment.get(i);
+
+            CompoundNBT compoundnbt = new CompoundNBT();
+            CompoundNBT itemTag = new CompoundNBT();
+            itemTag = stack.save(itemTag);
+            compoundnbt.put("item", itemTag);
+            listnbt.add(compoundnbt);
+        }
+        nbt.put("equipment", listnbt);
+
+        extraData.writeNbt(nbt);
     }
 
 }
