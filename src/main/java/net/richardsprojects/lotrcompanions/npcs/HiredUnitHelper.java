@@ -104,6 +104,12 @@ public class HiredUnitHelper {
             } else if (slot == EquipmentSlotType.LEGS) {
                 soldier.updateLegsSlot(item);
                 result = true;
+            } else if (slot == EquipmentSlotType.MAINHAND) {
+                soldier.updateMainhandSlot(item);
+                result = true;
+            } else if (slot == EquipmentSlotType.OFFHAND) {
+                soldier.updateOffhandSlot(item);
+                result = true;
             }
         }
 

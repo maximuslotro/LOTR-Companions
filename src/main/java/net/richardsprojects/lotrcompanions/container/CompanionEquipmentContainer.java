@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ArmorItem;
@@ -18,6 +19,7 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -27,7 +29,7 @@ import net.richardsprojects.lotrcompanions.npcs.HiredUnitHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompanionEquipmentContainer extends Container {
+public class CompanionEquipmentContainer extends Container implements IContainerListener {
 
     private Slot[] armorSlots = new Slot[4];
     private Slot mainHand;
@@ -127,6 +129,8 @@ public class CompanionEquipmentContainer extends Container {
                 return Pair.of(PlayerContainer.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_SHIELD);
             }
         });
+
+        this.addSlotListener(this);
     }
 
     @Override
@@ -187,14 +191,14 @@ public class CompanionEquipmentContainer extends Container {
                 }
             }
 
-            if (itemstack1.getItem() instanceof SwordItem || itemstack1.getItem() instanceof SpearItem) {
+            if ((itemstack1.getItem() instanceof SwordItem || itemstack1.getItem() instanceof SpearItem) && !mainHand.hasItem()) {
                 mainHand.set(itemstack1);
                 mainHand.setChanged();
                 HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.MAINHAND, itemstack1);
                 slotUpdated = true;
             }
 
-            if (itemstack1.getItem() instanceof ShieldItem) {
+            if (itemstack1.getItem() instanceof ShieldItem && !offHand.hasItem()) {
                 offHand.set(itemstack1);
                 offHand.setChanged();
                 HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.OFFHAND, itemstack1);
@@ -247,4 +251,38 @@ public class CompanionEquipmentContainer extends Container {
         extraData.writeNbt(nbt);
     }
 
+    @Override
+    public void refreshContainer(Container p_71110_1_, NonNullList<ItemStack> p_71110_2_) {
+
+    }
+
+    @Override
+    public void slotChanged(Container p_71111_1_, int slot, ItemStack itemStack) {
+        // TODO: Make sure there is no potential for item data loss with this implementation
+        // TODO: Remove logging
+        if (slot == mainHand.index) {
+            HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.MAINHAND, itemStack);
+            ExtendedLog.info("Mainhand slot updated: " + itemStack);
+        } else if (slot == offHand.index) {
+            HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.OFFHAND, itemStack);
+            ExtendedLog.info("Offhand slot updated: " + itemStack);
+        } else if (slot == armorSlots[0].index) {
+            HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.HEAD, itemStack);
+            ExtendedLog.info("Head slot updated: " + itemStack);
+        } else if (slot == armorSlots[1].index) {
+            HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.CHEST, itemStack);
+            ExtendedLog.info("Chest slot updated: " + itemStack);
+        } else if (slot == armorSlots[2].index) {
+            HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.LEGS, itemStack);
+            ExtendedLog.info("Legs slot updated: " + itemStack);
+        } else if (slot == armorSlots[3].index) {
+            HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.FEET, itemStack);
+            ExtendedLog.info("Feet slot updated: " + itemStack);
+        }
+    }
+
+    @Override
+    public void setContainerData(Container p_71112_1_, int p_71112_2_, int p_71112_3_) {
+
+    }
 }

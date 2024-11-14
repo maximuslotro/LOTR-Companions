@@ -595,6 +595,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         // only on server side update entityData to match inventory
         if (entityData.get(EQUIPMENT_HEAD).isEmpty()) {
             setItemSlot(EquipmentSlotType.HEAD, baseGear[0]);
+            inventory.setItem(9, ItemStack.EMPTY);
         } else {
             setItemSlot(EquipmentSlotType.HEAD, entityData.get(EQUIPMENT_HEAD));
             inventory.setItem(9, entityData.get(EQUIPMENT_HEAD));
@@ -602,6 +603,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
 
         if (entityData.get(EQUIPMENT_CHEST).isEmpty()) {
             setItemSlot(EquipmentSlotType.FEET, baseGear[1]);
+            inventory.setItem(10, ItemStack.EMPTY);
         } else {
             setItemSlot(EquipmentSlotType.CHEST, entityData.get(EQUIPMENT_CHEST));
             inventory.setItem(10, entityData.get(EQUIPMENT_CHEST));
@@ -609,6 +611,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
 
         if (entityData.get(EQUIPMENT_LEGS).isEmpty()) {
             setItemSlot(EquipmentSlotType.LEGS, baseGear[2]);
+            inventory.setItem(11, ItemStack.EMPTY);
         } else {
             setItemSlot(EquipmentSlotType.LEGS, entityData.get(EQUIPMENT_LEGS));
             inventory.setItem(11, entityData.get(EQUIPMENT_LEGS));
@@ -616,6 +619,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
 
         if (entityData.get(EQUIPMENT_FEET).isEmpty()) {
             setItemSlot(EquipmentSlotType.FEET, baseGear[3]);
+            inventory.setItem(12, ItemStack.EMPTY);
         } else {
             setItemSlot(EquipmentSlotType.FEET, entityData.get(EQUIPMENT_FEET));
             inventory.setItem(12, entityData.get(EQUIPMENT_FEET));
@@ -623,6 +627,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
 
         if (entityData.get(EQUIPMENT_MAINHAND).isEmpty()) {
             setItemSlot(EquipmentSlotType.MAINHAND, baseGear[4]);
+            inventory.setItem(13, ItemStack.EMPTY);
         } else {
             setItemSlot(EquipmentSlotType.MAINHAND, entityData.get(EQUIPMENT_MAINHAND));
             inventory.setItem(13, entityData.get(EQUIPMENT_MAINHAND));
@@ -630,6 +635,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
 
         if (entityData.get(EQUIPMENT_OFFHAND).isEmpty()) {
             setItemSlot(EquipmentSlotType.OFFHAND, baseGear[5]);
+            inventory.setItem(14, ItemStack.EMPTY);
         } else {
             setItemSlot(EquipmentSlotType.OFFHAND, entityData.get(EQUIPMENT_OFFHAND));
             inventory.setItem(14, entityData.get(EQUIPMENT_OFFHAND));
