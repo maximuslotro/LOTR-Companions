@@ -1,7 +1,7 @@
 package net.richardsprojects.lotrcompanions.networking;
 
-import com.github.maximuslotro.lotrrextended.ExtendedLog;
 import io.netty.buffer.Unpooled;
+import lotr.common.entity.npc.NPCEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
@@ -55,7 +55,6 @@ public class CompanionsClientOpenEquipmentPacket {
             for (int i = 9; i < 15; i++) {
                 if (inventory != null) {
                     ItemStack item = inventory.getItem(i);
-                    ExtendedLog.info("Base Gear: " + baseGear[i - 9]);
                     if (baseGear[i - 9] != null) {
                         if (msg.areItemStacksExactlyEqual(baseGear[i - 9], item)) {
                             item = ItemStack.EMPTY;
@@ -71,6 +70,16 @@ public class CompanionsClientOpenEquipmentPacket {
             // Prepare PacketBuffer with initialization data
             PacketBuffer initData = new PacketBuffer(Unpooled.buffer());
             CompanionEquipmentContainer.writeContainerInitData(initData, msg.entityId, equipment);
+
+            if (entity instanceof NPCEntity) {
+                NPCEntity npcEntity = (NPCEntity) entity;
+                if (npcEntity instanceof HiredBreeGuard) {
+                    ((HiredBreeGuard) npcEntity).setEquipmentOpen(true);
+                }
+                if (npcEntity instanceof HiredGondorSoldier) {
+                    ((HiredGondorSoldier) npcEntity).setEquipmentOpen(true);
+                }
+            }
 
             // Open GUI on client side
             NetworkHooks.openGui(context.get().getSender(),

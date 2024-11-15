@@ -64,10 +64,18 @@ public class ForgeEntityEvents {
         }
 
         // make companion no longer stationary
-        if (entity instanceof HiredGondorSoldier) {
-            ((HiredGondorSoldier) entity).setInventoryOpen(false);
-        } else if (entity instanceof HiredBreeGuard) {
-            ((HiredBreeGuard) entity).setInventoryOpen(false);
+        if (event.getContainer() instanceof CompanionContainer) {
+            if (entity instanceof HiredGondorSoldier) {
+                ((HiredGondorSoldier) entity).setInventoryOpen(false);
+            } else if (entity instanceof HiredBreeGuard) {
+                ((HiredBreeGuard) entity).setInventoryOpen(false);
+            }
+        } else if (event.getContainer() instanceof CompanionEquipmentContainer) {
+            if (entity instanceof HiredGondorSoldier) {
+                ((HiredGondorSoldier) entity).setEquipmentOpen(false);
+            } else if (entity instanceof HiredBreeGuard) {
+                ((HiredBreeGuard) entity).setEquipmentOpen(false);
+            }
         }
     }
 

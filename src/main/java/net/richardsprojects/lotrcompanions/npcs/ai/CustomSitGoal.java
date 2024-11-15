@@ -6,6 +6,8 @@ import lotr.common.entity.npc.ExtendedHirableEntity;
 import lotr.common.entity.npc.NPCEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.richardsprojects.lotrcompanions.npcs.HiredBreeGuard;
+import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
 
 public class CustomSitGoal extends Goal {
     private final NPCEntity entity;
@@ -33,7 +35,15 @@ public class CustomSitGoal extends Goal {
             if (livingentity == null) {
                 return true;
             } else {
-                return (!(this.entity.distanceToSqr(livingentity) < 144.0D) || livingentity.getLastHurtByMob() == null) && (this.unit.isStationary() || this.unit.isInventoryOpen());
+                // TODO: Temp hack until isEquipmentOpen is added to ExtendedHirableEntity in a new update
+                boolean equipmentOpen = false;
+                if (entity instanceof HiredGondorSoldier) {
+                    equipmentOpen = ((HiredGondorSoldier) entity).isEquipmentOpen();
+                } else if (entity instanceof HiredBreeGuard) {
+                    equipmentOpen = ((HiredBreeGuard) entity).isEquipmentOpen();
+                }
+
+                return (!(this.entity.distanceToSqr(livingentity) < 144.0D) || livingentity.getLastHurtByMob() == null) && (this.unit.isStationary() || this.unit.isInventoryOpen() || equipmentOpen);
             }
         }
     }

@@ -42,6 +42,7 @@ import net.richardsprojects.lotrcompanions.core.PacketHandler;
 import net.richardsprojects.lotrcompanions.npcs.ai.*;
 import net.richardsprojects.lotrcompanions.networking.OpenInventoryPacket;
 import net.richardsprojects.lotrcompanions.utils.Constants;
+import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
@@ -94,6 +95,8 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
     private static final DataParameter<ItemStack> EQUIPMENT_FEET = EntityDataManager.defineId(HiredGondorSoldier.class, DataSerializers.ITEM_STACK);
     private static final DataParameter<ItemStack> EQUIPMENT_MAINHAND = EntityDataManager.defineId(HiredGondorSoldier.class, DataSerializers.ITEM_STACK);
     private static final DataParameter<ItemStack> EQUIPMENT_OFFHAND = EntityDataManager.defineId(HiredGondorSoldier.class, DataSerializers.ITEM_STACK);
+
+    private static final DataParameter<Boolean> EQUIPMENT_OPEN = EntityDataManager.defineId(HiredGondorSoldier.class, DataSerializers.BOOLEAN);
 
     // 9 inventory slots + 6 equipment slots
     public Inventory inventory = new Inventory(15);
@@ -190,6 +193,7 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         this.entityData.define(STATIONARY, false);
         this.entityData.define(BASE_HEALTH, 30);
         this.entityData.define(INVENTORY_OPEN, false);
+        this.entityData.define(EQUIPMENT_OPEN, false);
         this.entityData.define(TMP_LAST_HEALTH, 30f);
 
         // equipment slots
@@ -224,7 +228,7 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         }
 
         if (entityData.get(EQUIPMENT_CHEST).isEmpty()) {
-            setItemSlot(EquipmentSlotType.FEET, baseGear[1]);
+            setItemSlot(EquipmentSlotType.CHEST, baseGear[1]);
             inventory.setItem(10, ItemStack.EMPTY);
         } else {
             setItemSlot(EquipmentSlotType.CHEST, entityData.get(EQUIPMENT_CHEST));
@@ -314,6 +318,14 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
 
     public void setInventoryOpen(boolean isOpen) {
         this.entityData.set(INVENTORY_OPEN, isOpen);
+    }
+
+    public boolean isEquipmentOpen() {
+        return this.entityData.get(EQUIPMENT_OPEN);
+    }
+
+    public void setEquipmentOpen(boolean isOpen) {
+        this.entityData.set(EQUIPMENT_OPEN, isOpen);
     }
 
     public int getMaxXp() {

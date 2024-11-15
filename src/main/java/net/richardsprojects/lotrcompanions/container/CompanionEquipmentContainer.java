@@ -1,6 +1,5 @@
 package net.richardsprojects.lotrcompanions.container;
 
-import com.github.maximuslotro.lotrrextended.ExtendedLog;
 import com.mojang.datafixers.util.Pair;
 import lotr.common.entity.npc.NPCEntity;
 import lotr.common.item.SpearItem;
@@ -158,9 +157,42 @@ public class CompanionEquipmentContainer extends Container implements IContainer
             } else {
                 return ItemStack.EMPTY;
             }
-            // TODO: Write if statements for handling the other 4 gear types to fix a crash
-            // TODO: Fix bug where shift-clicking items out doesn't actually remove them from the inventory the next time
-            // TODO: Fix where moving an item around prevents it from syncing - can probably do this with slot listeners?
+        } else if (slot != null && slot.equals(armorSlots[0]) && slot.hasItem()) {
+            if (player.inventory.getFreeSlot() > -1 || player.inventory.getSlotWithRemainingSpace(slot.getItem()) > -1) {
+                player.addItem(slot.getItem());
+                offHand.set(ItemStack.EMPTY);
+                offHand.setChanged();
+                HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.HEAD, ItemStack.EMPTY);
+            } else {
+                return ItemStack.EMPTY;
+            }
+        } else if (slot != null && slot.equals(armorSlots[1]) && slot.hasItem()) {
+            if (player.inventory.getFreeSlot() > -1 || player.inventory.getSlotWithRemainingSpace(slot.getItem()) > -1) {
+                player.addItem(slot.getItem());
+                offHand.set(ItemStack.EMPTY);
+                offHand.setChanged();
+                HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.CHEST, ItemStack.EMPTY);
+            } else {
+                return ItemStack.EMPTY;
+            }
+        } else if (slot != null && slot.equals(armorSlots[2]) && slot.hasItem()) {
+            if (player.inventory.getFreeSlot() > -1 || player.inventory.getSlotWithRemainingSpace(slot.getItem()) > -1) {
+                player.addItem(slot.getItem());
+                offHand.set(ItemStack.EMPTY);
+                offHand.setChanged();
+                HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.LEGS, ItemStack.EMPTY);
+            } else {
+                return ItemStack.EMPTY;
+            }
+        } else if (slot != null && slot.equals(armorSlots[3]) && slot.hasItem()) {
+            if (player.inventory.getFreeSlot() > -1 || player.inventory.getSlotWithRemainingSpace(slot.getItem()) > -1) {
+                player.addItem(slot.getItem());
+                offHand.set(ItemStack.EMPTY);
+                offHand.setChanged();
+                HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.FEET, ItemStack.EMPTY);
+            } else {
+                return ItemStack.EMPTY;
+            }
         } else if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
@@ -219,7 +251,7 @@ public class CompanionEquipmentContainer extends Container implements IContainer
             }
         }
 
-        return itemstack;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -259,25 +291,18 @@ public class CompanionEquipmentContainer extends Container implements IContainer
     @Override
     public void slotChanged(Container p_71111_1_, int slot, ItemStack itemStack) {
         // TODO: Make sure there is no potential for item data loss with this implementation
-        // TODO: Remove logging
         if (slot == mainHand.index) {
             HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.MAINHAND, itemStack);
-            ExtendedLog.info("Mainhand slot updated: " + itemStack);
         } else if (slot == offHand.index) {
             HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.OFFHAND, itemStack);
-            ExtendedLog.info("Offhand slot updated: " + itemStack);
         } else if (slot == armorSlots[0].index) {
             HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.HEAD, itemStack);
-            ExtendedLog.info("Head slot updated: " + itemStack);
         } else if (slot == armorSlots[1].index) {
             HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.CHEST, itemStack);
-            ExtendedLog.info("Chest slot updated: " + itemStack);
         } else if (slot == armorSlots[2].index) {
             HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.LEGS, itemStack);
-            ExtendedLog.info("Legs slot updated: " + itemStack);
         } else if (slot == armorSlots[3].index) {
             HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.FEET, itemStack);
-            ExtendedLog.info("Feet slot updated: " + itemStack);
         }
     }
 

@@ -79,6 +79,8 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
     private static final DataParameter<Boolean> INVENTORY_OPEN = EntityDataManager.defineId(HiredBreeGuard.class,
             DataSerializers.BOOLEAN);
 
+    private static final DataParameter<Boolean> EQUIPMENT_OPEN = EntityDataManager.defineId(HiredBreeGuard.class, DataSerializers.BOOLEAN);
+
     // Data Parameters for all equipment so it can be automatically synced
     private static final DataParameter<ItemStack> EQUIPMENT_CHEST = EntityDataManager.defineId(HiredBreeGuard.class, DataSerializers.ITEM_STACK);
     private static final DataParameter<ItemStack> EQUIPMENT_HEAD = EntityDataManager.defineId(HiredBreeGuard.class, DataSerializers.ITEM_STACK);
@@ -180,6 +182,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         this.entityData.define(STATIONARY, false);
         this.entityData.define(BASE_HEALTH, 30);
         this.entityData.define(INVENTORY_OPEN, false);
+        this.entityData.define(EQUIPMENT_OPEN, false);
         this.entityData.define(TMP_LAST_HEALTH, 30f);
 
         // equipment slots
@@ -243,6 +246,10 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         return this.entityData.get(INVENTORY_OPEN);
     }
 
+    public boolean isEquipmentOpen() {
+        return this.entityData.get(EQUIPMENT_OPEN);
+    }
+
     public void setMaxXp(int maxXp) {
         this.entityData.set(MAX_XP, maxXp);
     }
@@ -254,6 +261,10 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
 
     public void setInventoryOpen(boolean isOpen) {
         this.entityData.set(INVENTORY_OPEN, isOpen);
+    }
+
+    public void setEquipmentOpen(boolean isOpen) {
+        this.entityData.set(EQUIPMENT_OPEN, isOpen);
     }
 
     public int getMaxXp() {
@@ -602,7 +613,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         }
 
         if (entityData.get(EQUIPMENT_CHEST).isEmpty()) {
-            setItemSlot(EquipmentSlotType.FEET, baseGear[1]);
+            setItemSlot(EquipmentSlotType.CHEST, baseGear[1]);
             inventory.setItem(10, ItemStack.EMPTY);
         } else {
             setItemSlot(EquipmentSlotType.CHEST, entityData.get(EQUIPMENT_CHEST));
