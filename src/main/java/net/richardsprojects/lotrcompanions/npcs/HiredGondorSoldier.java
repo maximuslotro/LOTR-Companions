@@ -105,7 +105,7 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
             Constants.GONDOR_SOLDIER_HEAD,
             Constants.GONDOR_SOLDIER_CHEST,
             Constants.GONDOR_SOLDIER_LEGS,
-            Constants.GONDOR_SOLDIER_LEGS,
+            Constants.GONDOR_SOLDIER_FEET,
             Constants.GONDOR_SOLDIER_MAINHAND,
             Constants.GONDOR_SOLDIER_OFFHAND
     };
