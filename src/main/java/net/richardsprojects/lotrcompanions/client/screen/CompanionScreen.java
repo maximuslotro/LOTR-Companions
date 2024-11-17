@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -23,6 +24,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
 import net.richardsprojects.lotrcompanions.container.CompanionContainer;
+import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
 import net.richardsprojects.lotrcompanions.core.PacketHandler;
 import net.richardsprojects.lotrcompanions.networking.CompanionsClientOpenEquipmentPacket;
 import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
@@ -52,10 +54,19 @@ public class CompanionScreen extends ContainerScreen<CompanionContainer> impleme
 
     private Button equipmentButton;
 
-    public CompanionScreen(CompanionContainer container, PlayerInventory p_98410_, ExtendedHirableEntity companion) {
-        super(container, p_98410_, companion.getHiredUnitName());
+    public CompanionScreen(CompanionContainer container, PlayerInventory p_98410_, ITextComponent title) {
+        super(container, p_98410_, title);
 
-        this.companion = companion;
+        if (p_98410_.player.level.getEntity(container.getEntityId()) != null) {
+            if (p_98410_.player.level.getEntity(container.getEntityId()) instanceof ExtendedHirableEntity) {
+                this.companion = (ExtendedHirableEntity) p_98410_.player.level.getEntity(container.getEntityId());
+            } else {
+                companion = null;
+            }
+        } else {
+            companion = null;
+        }
+
         this.passEvents = false;
         this.imageHeight = 256;
         this.inventoryLabelY = 130;

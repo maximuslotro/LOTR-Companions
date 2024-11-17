@@ -33,6 +33,7 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.richardsprojects.lotrcompanions.container.CompanionContainer;
 import net.richardsprojects.lotrcompanions.core.PacketHandler;
+import net.richardsprojects.lotrcompanions.networking.CompanionsClientOpenMenuPacket;
 import net.richardsprojects.lotrcompanions.networking.OpenInventoryPacket;
 import net.richardsprojects.lotrcompanions.npcs.ai.*;
 import net.richardsprojects.lotrcompanions.utils.Constants;
@@ -284,8 +285,8 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         ItemStack itemstack = player.getItemInHand(hand);
         if (hand == Hand.MAIN_HAND) {
             if (this.isAlliedTo(player)) {
-                if (!this.level.isClientSide()) {
-                    this.openGui((ServerPlayerEntity) player);
+                if (this.level.isClientSide()) {
+                    PacketHandler.sendToServer(new CompanionsClientOpenMenuPacket(getId()));
                 }
             }
             return ActionResultType.sidedSuccess(this.level.isClientSide());
@@ -312,7 +313,8 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         return super.isAlliedTo(p_184191_1_);
     }
 
-    public void openGui(ServerPlayerEntity player) {
+    // TODO: Verify this is no longer needed and remove it
+    /*public void openGui(ServerPlayerEntity player) {
         if (player.containerMenu != player.inventoryMenu) {
             player.closeContainer();
         }
@@ -328,7 +330,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
 
         player.containerMenu.addSlotListener(player);
         MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.containerMenu));
-    }
+    }*/
 
     @Nullable
     public UUID getOwnerUUID() {

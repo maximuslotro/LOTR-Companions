@@ -90,8 +90,8 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
 
     @Override
     protected void renderLabels(MatrixStack matrix, int p_230451_2_, int p_230451_3_) {
-        this.font.draw(matrix, this.title, (float)this.titleLabelX, (float)this.titleLabelY, 4210752);
-        this.font.draw(matrix, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
+        this.font.draw(matrix, this.title, this.titleLabelX, this.titleLabelY, 4210752);
+        this.font.draw(matrix, this.inventory.getDisplayName(), this.inventoryLabelX, this.inventoryLabelY, 4210752);
 
         // show armor points
         if (this.entity != null) {
@@ -134,8 +134,6 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
     }
 
     private void renderBaseGearSlot(int slotX, int slotY, ItemStack item) {
-        String itemStackCountText = null;
-
         // Set rendering offsets
         this.setBlitOffset(100);
         this.itemRenderer.blitOffset = 100.0F;
@@ -143,7 +141,7 @@ public class CompanionEquipmentScreen extends ContainerScreen<CompanionEquipment
         // Render the item in the slot
         RenderSystem.enableDepthTest();
         this.itemRenderer.renderAndDecorateItem(this.minecraft.player, item, slotX, slotY);
-        this.itemRenderer.renderGuiItemDecorations(this.font, item, slotX, slotY, itemStackCountText);
+        this.itemRenderer.renderGuiItemDecorations(this.font, item, slotX, slotY, null);
 
         // Reset rendering offsets
         this.itemRenderer.blitOffset = 0.0F;

@@ -56,6 +56,8 @@ public class PacketHandler {
         INSTANCE.send(PacketDistributor.SERVER.noArg(), msg);
     }
 
+    // TODO: Remove this if it's no longer needed
+    /*
     @SuppressWarnings("resource")
     @OnlyIn(Dist.CLIENT)
     public static void openInventory(OpenInventoryPacket packet) {
@@ -81,7 +83,7 @@ public class PacketHandler {
                 Minecraft.getInstance().setScreen(new CompanionScreen(container, player.inventory, companion));
             }
         }
-    }
+    }*/
 
     /*
     @SuppressWarnings("resource")

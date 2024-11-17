@@ -6,6 +6,7 @@ import net.richardsprojects.lotrcompanions.core.PacketHandler;
 
 import java.util.function.Supplier;
 
+// TODO: This whole class should be able to be deleted but need to double check first
 public class OpenInventoryPacket {
     private final int id;
     private final int size;
@@ -37,7 +38,7 @@ public class OpenInventoryPacket {
 
     public static void handle(OpenInventoryPacket msg, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            PacketHandler.openInventory(msg);
+            //PacketHandler.openInventory(msg);
         });
         context.get().setPacketHandled(true);
     }

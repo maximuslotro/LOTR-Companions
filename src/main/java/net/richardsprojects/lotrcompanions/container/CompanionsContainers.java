@@ -12,6 +12,7 @@ public class CompanionsContainers {
 
     public static final DeferredRegister<ContainerType<?>> CONTAINERS;
     public static final RegistryObject<ContainerType<CompanionEquipmentContainer>> COMPANION_EQUIPMENT_CONTAINER;
+    public static final RegistryObject<ContainerType<CompanionContainer>> COMPANION_MAIN_CONTAINER;
 
     public CompanionsContainers() {
 
@@ -24,6 +25,7 @@ public class CompanionsContainers {
     static {
         CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, LOTRCompanions.MOD_ID);
         COMPANION_EQUIPMENT_CONTAINER = CONTAINERS.register("companion_equipment_container", () -> IForgeContainerType.create(CompanionEquipmentContainer::new));
+        COMPANION_MAIN_CONTAINER = CONTAINERS.register("companion_container", () -> IForgeContainerType.create(CompanionContainer::new));
     }
 }
 
