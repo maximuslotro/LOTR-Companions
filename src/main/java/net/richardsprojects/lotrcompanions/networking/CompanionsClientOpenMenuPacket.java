@@ -1,6 +1,7 @@
 package net.richardsprojects.lotrcompanions.networking;
 
 import io.netty.buffer.Unpooled;
+import lotr.common.entity.npc.ExtendedHirableEntity;
 import lotr.common.entity.npc.NPCEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -89,7 +90,10 @@ public class CompanionsClientOpenMenuPacket {
 
             // Prepare PacketBuffer with initialization data
             PacketBuffer initData = new PacketBuffer(Unpooled.buffer());
-            CompanionEquipmentContainer.writeContainerInitData(initData, msg.entityId, equipment);
+            CompanionContainer.writeContainerInitData(initData, msg.entityId);
+
+            ExtendedHirableEntity hirableEntity = null;
+            if (entity instanceof ExtendedHirableEntity) hirableEntity = (ExtendedHirableEntity) entity;
 
             if (entity instanceof NPCEntity) {
                 NPCEntity npcEntity = (NPCEntity) entity;
@@ -102,11 +106,12 @@ public class CompanionsClientOpenMenuPacket {
             }
 
             // Open GUI on client side
-            NetworkHooks.openGui(context.get().getSender(),
+            assert hirableEntity != null;
+            NetworkHooks.openGui(Objects.requireNonNull(context.get().getSender()),
                     new SimpleNamedContainerProvider(
                             (windowId, playerInventory, player) ->
-                                    CompanionsContainers.COMPANION_EQUIPMENT_CONTAINER.get().create(windowId, playerInventory, initData),
-                            CompanionEquipmentContainer.CONTAINER_TITLE
+                                    CompanionsContainers.COMPANION_MAIN_CONTAINER.get().create(windowId, playerInventory, initData),
+                           hirableEntity.getHiredUnitName()
                     ),
                     buf -> CompanionContainer.writeContainerInitData(buf, msg.entityId)
             );
