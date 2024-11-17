@@ -1,8 +1,8 @@
 {
   "entity.lotr.hired_gondor_soldier": "Hired Gondor Soldier",
   "entity.lotr.hired_bree_guard": "Hired Bree-land Guard",
-  "entity.lotr.shortname.hired_gondor_soldier": "%1$s the Gondor Soldier",
-  "entity.lotr.shortname.hired_bree_guard": "%1$s the Bree-land Guard",
+  "entity.lotr.shortname.hired_gondor_soldier": "%1$s (Gondor Soldier)",
+  "entity.lotr.shortname.hired_bree_guard": "%1$s (Bree-land Guard)",
   "container.lotrcompanions.equipment": "Update Equipment",
   "container.lotrcompanions.companion_inventory": "Companion Inventory",
   "item.lotrcompanions.hired_gondor_soldier_spawn_egg": "Hired Gondor Soldier Spawn Egg",
