@@ -37,7 +37,6 @@ public class PacketHandler {
 
     public static void register() {
         int id = 0;
-        INSTANCE.registerMessage(id++, OpenInventoryPacket.class, OpenInventoryPacket::encode, OpenInventoryPacket::decode, OpenInventoryPacket::handle);
         INSTANCE.registerMessage(id++, SetAlertPacket.class, SetAlertPacket::encode, SetAlertPacket::decode,
                 SetAlertPacket::handle);
         INSTANCE.registerMessage(id++, SetPatrollingPacket.class, SetPatrollingPacket::encode, SetPatrollingPacket::decode,
@@ -56,65 +55,4 @@ public class PacketHandler {
         INSTANCE.send(PacketDistributor.SERVER.noArg(), msg);
     }
 
-    // TODO: Remove this if it's no longer needed
-    /*
-    @SuppressWarnings("resource")
-    @OnlyIn(Dist.CLIENT)
-    public static void openInventory(OpenInventoryPacket packet) {
-        PlayerEntity player = Minecraft.getInstance().player;
-        if (player != null) {
-            Entity entity = player.level.getEntity(packet.getEntityId());
-
-            if (entity instanceof HiredGondorSoldier) {
-                HiredGondorSoldier companion = (HiredGondorSoldier) entity;
-
-                ClientPlayerEntity clientplayerentity = Minecraft.getInstance().player;
-
-                CompanionContainer container = new CompanionContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
-                clientplayerentity.containerMenu = container;
-                Minecraft.getInstance().setScreen(new CompanionScreen(container, player.inventory, companion));
-            } else if (entity instanceof HiredBreeGuard) {
-                HiredBreeGuard companion = (HiredBreeGuard) entity;
-
-                ClientPlayerEntity clientplayerentity = Minecraft.getInstance().player;
-
-                CompanionContainer container = new CompanionContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
-                clientplayerentity.containerMenu = container;
-                Minecraft.getInstance().setScreen(new CompanionScreen(container, player.inventory, companion));
-            }
-        }
-    }*/
-
-    /*
-    @SuppressWarnings("resource")
-    @OnlyIn(Dist.CLIENT)
-    public static void openEquipmentMenu(CompanionsServerOpenEquipmentPacket packet) {
-        PlayerEntity player = Minecraft.getInstance().player;
-        if (player != null) {
-            Entity entity = player.level.getEntity(packet.getEntityId());
-
-            if (entity instanceof HiredGondorSoldier) {
-                HiredGondorSoldier companion = (HiredGondorSoldier) entity;
-                ITextComponent title = new TranslationTextComponent("container.lotrcompanions.equipment",
-                        new StringTextComponent(companion.getPersonalInfo().getName()));
-
-                ClientPlayerEntity clientplayerentity = Minecraft.getInstance().player;
-
-                CompanionEquipmentContainer container = new CompanionEquipmentContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
-                clientplayerentity.containerMenu = container;
-                Minecraft.getInstance().setScreen(new CompanionEquipmentScreen(container, player.inventory, companion, title));
-            } else if (entity instanceof HiredBreeGuard) {
-                HiredBreeGuard companion = (HiredBreeGuard) entity;
-                companion.getPersonalInfo().getName();
-                ITextComponent title = new TranslationTextComponent("container.lotrcompanions.equipment",
-                        new StringTextComponent(companion.getPersonalInfo().getName()));
-
-                ClientPlayerEntity clientplayerentity = Minecraft.getInstance().player;
-
-                CompanionEquipmentContainer container = new CompanionEquipmentContainer(packet.getId(), player.inventory, companion.inventory, companion.getId());
-                clientplayerentity.containerMenu = container;
-                Minecraft.getInstance().setScreen(new CompanionEquipmentScreen(container, player.inventory, companion, title));
-            }
-        }
-    }*/
 }

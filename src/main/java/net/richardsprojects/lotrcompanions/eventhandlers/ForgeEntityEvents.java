@@ -4,6 +4,7 @@ import lotr.common.entity.npc.*;
 import lotr.common.entity.npc.data.NPCEntitySettings;
 import lotr.common.entity.npc.data.NPCEntitySettingsManager;
 import lotr.common.init.ExtendedItems;
+import lotr.common.util.CoinUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +23,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.richardsprojects.lotrcompanions.container.CompanionContainer;
 import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
 import net.richardsprojects.lotrcompanions.npcs.*;
-import net.richardsprojects.lotrcompanions.utils.CoinUtils;
 import net.richardsprojects.lotrcompanions.utils.TeleportHelper;
 
 import java.util.*;
@@ -127,7 +127,7 @@ public class ForgeEntityEvents {
             return;
         }
 
-        int coins = CoinUtils.totalCoins(event.getPlayer().inventory);
+        int coins = CoinUtils.totalValueInPlayerInventory(event.getPlayer().inventory);
         if (coins < 60) {
             event.getPlayer().sendMessage(new StringTextComponent("I require 60 coins in payment to be hired."), event.getPlayer().getUUID());
             return;
@@ -169,7 +169,7 @@ public class ForgeEntityEvents {
 
         // TODO: Make prices be based upon faction reputation
 
-        int coins = CoinUtils.totalCoins(event.getPlayer().inventory);
+        int coins = CoinUtils.totalValueInInventory(event.getPlayer().inventory);
         if (coins < 40) {
             event.getPlayer().sendMessage(new StringTextComponent("I require 40 coins in payment to be hired."), event.getPlayer().getUUID());
             return;

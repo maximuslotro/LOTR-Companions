@@ -10,7 +10,6 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -28,13 +27,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.richardsprojects.lotrcompanions.container.CompanionContainer;
 import net.richardsprojects.lotrcompanions.core.PacketHandler;
 import net.richardsprojects.lotrcompanions.networking.CompanionsClientOpenMenuPacket;
-import net.richardsprojects.lotrcompanions.networking.OpenInventoryPacket;
 import net.richardsprojects.lotrcompanions.npcs.ai.*;
 import net.richardsprojects.lotrcompanions.utils.Constants;
 
@@ -312,25 +306,6 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
 
         return super.isAlliedTo(p_184191_1_);
     }
-
-    // TODO: Verify this is no longer needed and remove it
-    /*public void openGui(ServerPlayerEntity player) {
-        if (player.containerMenu != player.inventoryMenu) {
-            player.closeContainer();
-        }
-
-        player.nextContainerCounter();
-        PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new OpenInventoryPacket(
-                player.containerCounter, this.inventory.getContainerSize(), this.getId()));
-        setInventoryOpen(true);
-
-        player.containerMenu = new CompanionContainer(
-                player.containerCounter, player.inventory, inventory, getId()
-        );
-
-        player.containerMenu.addSlotListener(player);
-        MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.containerMenu));
-    }*/
 
     @Nullable
     public UUID getOwnerUUID() {
