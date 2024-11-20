@@ -3,6 +3,7 @@ package net.richardsprojects.lotrcompanions.npcs;
 import lotr.common.entity.npc.ExtendedHirableEntity;
 import lotr.common.entity.npc.NPCEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -16,9 +17,20 @@ public class HiredUnitHelper {
 
     public static void die(World world, DamageSource source, ExtendedHirableEntity unit) {
         if (!world.isClientSide && world.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && unit.getOwner() instanceof ServerPlayerEntity) {
-            // TODO: Update this show cause of death
-            unit.getOwner().sendMessage(new TranslationTextComponent("notification.hired_companion_died", unit.getHiredUnitName()), unit.getOwnerUUID());
+            unit.getOwner().sendMessage(getCompanionDeathMessage(unit, source), unit.getOwnerUUID());
         }
+    }
+
+    private static TranslationTextComponent getCompanionDeathMessage(ExtendedHirableEntity unit, DamageSource source) {
+        LivingEntity killer = null;
+        if (unit instanceof LivingEntity) {
+            killer = ((LivingEntity) unit).getKillCredit();
+        }
+        String s = "death.attack." + source.msgId;
+
+        TranslationTextComponent companionName = new TranslationTextComponent("notification.hired_companion_prefix", unit.getHiredUnitName());
+
+        return killer != null ? new TranslationTextComponent(s, companionName, killer.getDisplayName()) : new TranslationTextComponent(s, companionName);
     }
 
     public static void giveExperiencePoints(ExtendedHirableEntity unit, int points) {

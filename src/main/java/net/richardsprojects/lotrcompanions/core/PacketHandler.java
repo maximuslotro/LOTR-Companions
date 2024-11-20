@@ -6,27 +6,12 @@
  */
 package net.richardsprojects.lotrcompanions.core;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
-import net.richardsprojects.lotrcompanions.client.screen.CompanionEquipmentScreen;
-import net.richardsprojects.lotrcompanions.client.screen.CompanionScreen;
-import net.richardsprojects.lotrcompanions.container.CompanionContainer;
-import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
-import net.richardsprojects.lotrcompanions.npcs.HiredBreeGuard;
-import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
 import net.richardsprojects.lotrcompanions.networking.*;
 
 public class PacketHandler {
