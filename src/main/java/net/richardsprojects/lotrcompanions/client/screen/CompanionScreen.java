@@ -14,7 +14,6 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -24,11 +23,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
 import net.richardsprojects.lotrcompanions.container.CompanionContainer;
-import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
 import net.richardsprojects.lotrcompanions.core.PacketHandler;
 import net.richardsprojects.lotrcompanions.networking.CompanionsClientOpenEquipmentPacket;
 import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
-import net.richardsprojects.lotrcompanions.networking.SetPatrollingPacket;
 import net.richardsprojects.lotrcompanions.networking.SetStationaryPacket;
 import net.richardsprojects.lotrcompanions.utils.Constants;
 
@@ -95,13 +92,12 @@ public class CompanionScreen extends ContainerScreen<CompanionContainer> impleme
         row1 = topPos + 42;
         col1 = leftPos + sidebarX + 62;
 
+        // TODO: At some point add a guard mode
         this.patrolButton = addButton(new CompanionButton("patrolling", col1, row1,16, 12,
                 0, 0
                 ,13,
                 PATROL_BUTTON,
-                btn -> {
-                    PacketHandler.INSTANCE.sendToServer(new SetPatrollingPacket(companion.getHiredUnitId()));
-                })
+                btn -> {})
         );
         this.stationaryButton = addButton(new CompanionButton("stationary", col1, row1 + 14,
                 16, 12, 0, 0, 13,

@@ -290,7 +290,6 @@ public class CompanionEquipmentContainer extends Container implements IContainer
 
     @Override
     public void slotChanged(Container p_71111_1_, int slot, ItemStack itemStack) {
-        // TODO: Make sure there is no potential for item data loss with this implementation
         if (slot == mainHand.index) {
             HiredUnitHelper.updateEquipmentSlot(companion, EquipmentSlotType.MAINHAND, itemStack);
         } else if (slot == offHand.index) {

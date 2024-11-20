@@ -115,20 +115,6 @@ public class CompanionContainer extends Container {
         CompoundNBT nbt = new CompoundNBT();
         nbt.putInt("entityId", entityId); // write the entity Id
 
-        // write their equipment including empty slots
-        // TODO: Not sure if this will need to be re-implemented so leaving it for now
-        /*ListNBT listnbt = new ListNBT();
-        for (int i = 0; i < 6; i++) {
-            ItemStack stack = equipment.get(i);
-
-            CompoundNBT compoundnbt = new CompoundNBT();
-            CompoundNBT itemTag = new CompoundNBT();
-            itemTag = stack.save(itemTag);
-            compoundnbt.put("item", itemTag);
-            listnbt.add(compoundnbt);
-        }
-        nbt.put("equipment", listnbt);*/
-
         extraData.writeNbt(nbt);
     }
 }

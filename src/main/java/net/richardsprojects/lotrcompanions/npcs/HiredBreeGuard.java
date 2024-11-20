@@ -321,12 +321,12 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new CustomSitGoal(this,this));
         this.goalSelector.addGoal(3, new CustomFollowOwnerGoal(this, this,1.3D, 8.0F, 2.0F, false));
-        this.goalSelector.addGoal(3, new EatGoal(this,this));
         this.goalSelector.addGoal(5, new CustomWaterAvoidingRandomWalkingGoal(this,this, 1.0D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new OpenDoorGoal(this, true));
         this.goalSelector.addGoal(9, new LowHealthGoal(this,this));
+        this.goalSelector.addGoal(10, new EatGoal(this,this));
         this.targetSelector.addGoal(1, new CustomOwnerHurtByTargetGoal(this,this));
         this.targetSelector.addGoal(2, new CustomOwnerHurtTargetGoal(this,this));
         this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
@@ -621,12 +621,14 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
             inventory.setItem(13, entityData.get(EQUIPMENT_MAINHAND));
         }
 
-        if (entityData.get(EQUIPMENT_OFFHAND).isEmpty()) {
-            setItemSlot(EquipmentSlotType.OFFHAND, baseGear[5]);
-            inventory.setItem(14, ItemStack.EMPTY);
-        } else {
-            setItemSlot(EquipmentSlotType.OFFHAND, entityData.get(EQUIPMENT_OFFHAND));
-            inventory.setItem(14, entityData.get(EQUIPMENT_OFFHAND));
+        if (!getItemBySlot(EquipmentSlotType.OFFHAND).isEdible()) {
+            if (entityData.get(EQUIPMENT_OFFHAND).isEmpty()) {
+                setItemSlot(EquipmentSlotType.OFFHAND, baseGear[5]);
+                inventory.setItem(14, ItemStack.EMPTY);
+            } else if (!entityData.get(EQUIPMENT_OFFHAND).isEmpty()) {
+                setItemSlot(EquipmentSlotType.OFFHAND, entityData.get(EQUIPMENT_OFFHAND));
+                inventory.setItem(14, entityData.get(EQUIPMENT_OFFHAND));
+            }
         }
     }
 

@@ -12,7 +12,6 @@ public class EatGoal extends Goal {
 
     protected final ExtendedHirableEntity companion;
     ItemStack food = ItemStack.EMPTY;
-    ItemStack oldOffhand = ItemStack.EMPTY;
     boolean started = false;
     int timeLeft = -1;
 
@@ -22,7 +21,7 @@ public class EatGoal extends Goal {
     }
 
     public boolean canUse() {
-        if (entity.getHealth() < entity.getMaxHealth() && !companion.isInventoryOpen()) {
+        if (entity.getHealth() < entity.getMaxHealth() && !companion.isInventoryOpen() && !entity.getNPCCombatUpdater().isCombatStance()) {
             food = companion.checkFood();
             return !food.isEmpty();
         }
@@ -31,16 +30,13 @@ public class EatGoal extends Goal {
 
     public void start() {
         started = true;
-        oldOffhand = companion.getCustomInventory().getItem(14).copy();
-        companion.getCustomInventory().setItem(14, food);
         timeLeft = food.getUseDuration() + 1;
         entity.setItemInHand(Hand.OFF_HAND, food);
         entity.startUsingItem(Hand.OFF_HAND);
     }
 
     public void stop() {
-        companion.getCustomInventory().setItem(14, oldOffhand);
-        entity.setItemSlot(EquipmentSlotType.OFFHAND, oldOffhand);
+        entity.setItemSlot(EquipmentSlotType.OFFHAND, ItemStack.EMPTY);
         started = false;
         timeLeft = -1;
     }
