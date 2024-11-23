@@ -21,13 +21,19 @@ public class EatGoal extends Goal {
     }
 
     public boolean canUse() {
-        if (entity.getHealth() < entity.getMaxHealth() && !companion.isInventoryOpen() && !entity.getNPCCombatUpdater().isCombatStance()) {
+        if (entity.getHealth() < entity.getMaxHealth() / 2 && !companion.isInventoryOpen() && !entity.getNPCCombatUpdater().isCombatStance()) {
             food = companion.checkFood();
             return !food.isEmpty();
         }
         return false;
     }
 
+    @Override
+    public boolean canContinueToUse() {
+        return entity.getHealth() < entity.getMaxHealth() && !entity.getNPCCombatUpdater().isCombatStance() && !companion.checkFood().isEmpty();
+    }
+
+    @Override
     public void start() {
         started = true;
         timeLeft = food.getUseDuration() + 1;
@@ -35,15 +41,12 @@ public class EatGoal extends Goal {
         entity.startUsingItem(Hand.OFF_HAND);
     }
 
+    @Override
     public void stop() {
+        entity.stopUsingItem();
         entity.setItemSlot(EquipmentSlotType.OFFHAND, ItemStack.EMPTY);
         started = false;
         timeLeft = -1;
-    }
-
-    @Override
-    public boolean isInterruptable() {
-        return false;
     }
 
     public void tick () {

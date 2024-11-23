@@ -19,6 +19,7 @@ public class CustomSitGoal extends Goal {
         this.setFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.MOVE));
     }
 
+    @Override
     public boolean canContinueToUse() {
         return this.unit.isStationary() || this.unit.isInventoryOpen();
     }

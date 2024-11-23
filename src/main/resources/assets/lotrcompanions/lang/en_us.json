@@ -10,5 +10,6 @@
   "notification.hired_companion_died": "Your hired companion %1$s has died.",
   "gui.lotrextended.menu.equipment": "Equipment",
   "gui.lotrextended.menu.back": "Back",
-  "notification.hired_companion_prefix": "Your hired companion %1$s"
+  "notification.hired_companion_prefix": "Your hired companion %1$s",
+  "notification.could_use_food": "I could use food!"
 }

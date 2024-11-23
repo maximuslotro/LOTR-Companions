@@ -325,8 +325,10 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(9, new LowHealthGoal(this,this));
-        this.goalSelector.addGoal(10, new EatGoal(this,this));
+        // TODO: Re-enable food eating one when I figure out how to get it to not mess up
+        //  their attack animations
+        //this.goalSelector.addGoal(9, new LowHealthGoal(this,this));
+        //this.goalSelector.addGoal(10, new EatGoal(this,this));
         this.targetSelector.addGoal(1, new CustomOwnerHurtByTargetGoal(this,this));
         this.targetSelector.addGoal(2, new CustomOwnerHurtTargetGoal(this,this));
         this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
@@ -625,7 +627,7 @@ public class HiredBreeGuard extends BreeGuardEntity implements ExtendedHirableEn
             if (entityData.get(EQUIPMENT_OFFHAND).isEmpty()) {
                 setItemSlot(EquipmentSlotType.OFFHAND, baseGear[5]);
                 inventory.setItem(14, ItemStack.EMPTY);
-            } else if (!entityData.get(EQUIPMENT_OFFHAND).isEmpty()) {
+            } else {
                 setItemSlot(EquipmentSlotType.OFFHAND, entityData.get(EQUIPMENT_OFFHAND));
                 inventory.setItem(14, entityData.get(EQUIPMENT_OFFHAND));
             }
