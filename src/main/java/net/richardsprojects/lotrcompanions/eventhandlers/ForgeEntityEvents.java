@@ -1,5 +1,6 @@
 package net.richardsprojects.lotrcompanions.eventhandlers;
 
+import com.github.maximuslotro.lotrrextended.ExtendedLog;
 import lotr.common.entity.npc.*;
 import lotr.common.entity.npc.data.NPCEntitySettings;
 import lotr.common.entity.npc.data.NPCEntitySettingsManager;
@@ -13,10 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.entity.living.EntityTeleportEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -209,15 +207,16 @@ public class ForgeEntityEvents {
     }
 
     @SubscribeEvent
-    public static void preventFriendlyFireFromPlayerToCompanion(LivingDamageEvent event) {
-        if (!HiredUnitHelper.isEntityHiredUnit(event.getEntity())) {
-            return;
-        }
+    public static void preventFriendlyFireFromPlayerToCompanion(LivingAttackEvent event) {
+        ExtendedHirableEntity hired = HiredUnitHelper.getExtendedHirableEntity(event.getEntity());
+        if (hired == null) return;
 
-        UUID owner = HiredUnitHelper.getExtendedHirableEntity(event.getEntity()).getOwnerUUID();
+        UUID owner = hired.getOwnerUUID();
+        if (event.getSource() == null) return;
 
         if (event.getSource() != null && event.getSource().getEntity() != null
                 && event.getSource().getEntity() instanceof PlayerEntity) {
+            ExtendedLog.info("Inside if statement");
             // cancel a damage event if damage comes from owner
             PlayerEntity player = (PlayerEntity) event.getSource().getEntity();
             if (owner.equals(player.getUUID())) {
