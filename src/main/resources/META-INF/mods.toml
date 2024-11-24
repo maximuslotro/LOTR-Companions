@@ -6,7 +6,7 @@ license="GPL 3.0"
 
 [[mods]]
 modId="lotrcompanions"
-version="${version}"
+version="0.4.0"
 displayName="LOTR: Companions"
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 
