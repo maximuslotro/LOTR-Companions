@@ -65,15 +65,11 @@ public class HiredUnitHelper {
         if (!isEntityHiredUnit(entity)) return null;
 
         // attempt to cast to proper unit
-        ExtendedHirableEntity result = null;
-
-        if (entity instanceof HiredBreeGuard) {
-            result = (ExtendedHirableEntity) entity;
-        } else if (entity instanceof HiredGondorSoldier) {
-            result = (ExtendedHirableEntity) entity;
+        if (entity instanceof ExtendedHirableEntity) {
+            return (ExtendedHirableEntity) entity;
         }
 
-        return result;
+        return null;
     }
 
     public static boolean updateEquipmentSlot(NPCEntity companion, EquipmentSlotType slot, ItemStack item) {
