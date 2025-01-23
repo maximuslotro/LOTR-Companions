@@ -11,5 +11,6 @@
   "gui.lotrextended.menu.equipment": "Equipment",
   "gui.lotrextended.menu.back": "Back",
   "notification.hired_companion_prefix": "Your hired companion %1$s",
-  "notification.could_use_food": "I could use food!"
+  "notification.could_use_food": "I could use food!",
+  "entity_title.lotrcompanions.hired_gondor_soldier": "%1$s the Gondor Soldier"
 }

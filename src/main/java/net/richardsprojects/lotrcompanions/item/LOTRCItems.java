@@ -14,7 +14,4 @@ public class LOTRCItems {
 
     public static final RegistryObject<ForgeSpawnEggItem> HIRED_GONDOR_SOLDIER_EGG = ITEMS.register("hired_gondor_soldier_spawn_egg",
             HiredGondorSoldierEggItem::new);
-
-    public static final RegistryObject<ForgeSpawnEggItem> HIRED_BREE_GUARD_EGG = ITEMS.register("hired_bree_guard_spawn_egg",
-            HiredBreeGuardEggItem::new);
 }

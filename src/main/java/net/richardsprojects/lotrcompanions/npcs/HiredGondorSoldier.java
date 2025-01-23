@@ -7,9 +7,13 @@
 
 package net.richardsprojects.lotrcompanions.npcs;
 
+import com.github.maximuslotro.lotrrextended.common.network.ExtendedCPacketOpenHiredMenu;
+import com.github.maximuslotro.lotrrextended.common.network.ExtendedPacketHandler;
 import lotr.common.entity.npc.ExtendedHirableEntity;
 import lotr.common.entity.npc.GondorSoldierEntity;
 
+import lotr.common.entity.npc.ai.goal.*;
+import lotr.common.util.ExtendedHiredUnitHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -33,9 +37,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.richardsprojects.lotrcompanions.core.PacketHandler;
-import net.richardsprojects.lotrcompanions.networking.CompanionsClientOpenMenuPacket;
-import net.richardsprojects.lotrcompanions.npcs.ai.*;
 import net.richardsprojects.lotrcompanions.utils.Constants;
 
 import javax.annotation.Nullable;
@@ -52,13 +53,13 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
     protected static final DataParameter<Optional<UUID>> DATA_OWNERUUID_ID = EntityDataManager.defineId(HiredGondorSoldier.class, DataSerializers.OPTIONAL_UUID);
     private static final DataParameter<Integer> LVL = EntityDataManager.defineId(HiredGondorSoldier.class,
             DataSerializers.INT);
-    private static final DataParameter<Integer> CURRENT_XP = EntityDataManager.defineId(HiredGondorSoldier.class,
-            DataSerializers.INT);
+    private static final DataParameter<Float> CURRENT_XP = EntityDataManager.defineId(HiredGondorSoldier.class,
+            DataSerializers.FLOAT);
 
     private static final DataParameter<Integer> BASE_HEALTH = EntityDataManager.defineId(HiredGondorSoldier.class,
             DataSerializers.INT);
-    private static final DataParameter<Integer> MAX_XP = EntityDataManager.defineId(HiredGondorSoldier.class,
-            DataSerializers.INT);
+    private static final DataParameter<Float> MAX_XP = EntityDataManager.defineId(HiredGondorSoldier.class,
+            DataSerializers.FLOAT);
 
     private static final DataParameter<Integer> KILLS = EntityDataManager.defineId(HiredGondorSoldier.class, DataSerializers.INT);
 
@@ -177,8 +178,8 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         this.entityData.define(DATA_FLAGS_ID, (byte)0);
         this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
         this.entityData.define(LVL, 1);
-        this.entityData.define(CURRENT_XP, 0);
-        this.entityData.define(MAX_XP, 1);
+        this.entityData.define(CURRENT_XP, 0f);
+        this.entityData.define(MAX_XP, 1f);
         this.entityData.define(KILLS, 0);
         this.entityData.define(FOLLOWING, false);
         this.entityData.define(GUARDING, false);
@@ -296,11 +297,11 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         return ItemStack.EMPTY;
     }
 
-    public void setCurrentXp(int currentXp) {
+    public void setCurrentXp(float currentXp) {
         this.entityData.set(CURRENT_XP, currentXp);
     }
 
-    public int getCurrentXp() {
+    public float getCurrentXp() {
         return this.entityData.get(CURRENT_XP);
     }
 
@@ -308,7 +309,7 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         return this.entityData.get(INVENTORY_OPEN);
     }
 
-    public void setMaxXp(int maxXp) {
+    public void setMaxXp(float maxXp) {
         this.entityData.set(MAX_XP, maxXp);
     }
 
@@ -324,7 +325,7 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         this.entityData.set(EQUIPMENT_OPEN, isOpen);
     }
 
-    public int getMaxXp() {
+    public float getMaxXp() {
         return this.entityData.get(MAX_XP);
     }
 
@@ -338,16 +339,21 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
 
     @Override
     public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
-
         if (hand == Hand.MAIN_HAND) {
             if (this.isAlliedTo(player)) {
                 if (this.level.isClientSide()) {
-                    PacketHandler.sendToServer(new CompanionsClientOpenMenuPacket(getId()));
+                    ExtendedPacketHandler.sendToServer(new ExtendedCPacketOpenHiredMenu(getId()));
                 }
             }
             return ActionResultType.sidedSuccess(this.level.isClientSide());
         }
         return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public ITextComponent getHiredUnitNameAndTitle() {
+        return new TranslationTextComponent("entity_title.lotrcompanions.hired_gondor_soldier",
+                new StringTextComponent(getPersonalInfo().getName()));
     }
 
     public boolean isAlliedTo(Entity p_184191_1_) {
@@ -377,9 +383,9 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new CustomSitGoal(this,this));
-        this.goalSelector.addGoal(3, new CustomFollowOwnerGoal(this, this, 1.3D, 8.0F, 2.0F, false));
-        this.goalSelector.addGoal(5, new CustomWaterAvoidingRandomWalkingGoal(this,this, 1.0D));
+        this.goalSelector.addGoal(1, new ExtendedHiredSitGoal(this));
+        this.goalSelector.addGoal(3, new ExtendedHiredFollowPlayerGoal(this, 1.3D, 8.0F, 2.0F, false));
+        this.goalSelector.addGoal(5, new ExtendedHiredWaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new OpenDoorGoal(this, true));
@@ -387,8 +393,8 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         //  their attack animations
         //this.goalSelector.addGoal(9, new LowHealthGoal(this,this));
         //this.goalSelector.addGoal(10, new EatGoal(this,this));
-        this.targetSelector.addGoal(1, new CustomOwnerHurtByTargetGoal(this,this));
-        this.targetSelector.addGoal(2, new CustomOwnerHurtTargetGoal(this,this));
+        this.targetSelector.addGoal(1, new ExtendedHiredPlayerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new ExtendedHiredPlayerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
     }
 
@@ -418,8 +424,8 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         tag.putBoolean("stationary", this.isStationary());
         tag.putInt("mob_kills", this.getMobKills());
         tag.putInt("xp_level", this.getExpLvl());
-        tag.putInt("current_xp", this.getCurrentXp());
-        tag.putInt("max_xp", this.getMaxXp());
+        tag.putFloat("current_xp", this.getCurrentXp());
+        tag.putFloat("max_xp", this.getMaxXp());
         tag.putInt("base_health", this.getBaseHealth());
         tag.putFloat("tmp_last_health", this.getHealth());
     }
@@ -568,7 +574,7 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
     }
 
     public void die(DamageSource p_70645_1_) {
-        HiredUnitHelper.die(this.level, p_70645_1_, this);
+        ExtendedHiredUnitHelper.die(this.level, p_70645_1_, this);
         super.die(p_70645_1_);
     }
 
@@ -661,7 +667,7 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         setHealth(p_70606_1_);
     }
 
-    public void giveExperiencePoints(int points) {
-        HiredUnitHelper.giveExperiencePoints(this, points);
+    public void giveExperiencePoints(float points) {
+        ExtendedHiredUnitHelper.giveExperiencePoints(this, points);
     }
 }

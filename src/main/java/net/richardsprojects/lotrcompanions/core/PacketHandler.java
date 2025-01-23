@@ -12,7 +12,6 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 import net.richardsprojects.lotrcompanions.LOTRCompanions;
-import net.richardsprojects.lotrcompanions.networking.*;
 
 public class PacketHandler {
     private static final String PROTOCOL_VERSION = "1";
@@ -21,6 +20,8 @@ public class PacketHandler {
                     "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     public static void register() {
+        // All networking packets are now in Renewed Extended
+        /**
         int id = 0;
         INSTANCE.registerMessage(id++, SetAlertPacket.class, SetAlertPacket::encode, SetAlertPacket::decode,
                 SetAlertPacket::handle);
@@ -32,6 +33,7 @@ public class PacketHandler {
                 ReleasePacket::handle);
         INSTANCE.registerMessage(id++, CompanionsClientOpenEquipmentPacket.class, CompanionsClientOpenEquipmentPacket::encode, CompanionsClientOpenEquipmentPacket::decode, CompanionsClientOpenEquipmentPacket::handle);
         INSTANCE.registerMessage(id++, CompanionsClientOpenMenuPacket.class, CompanionsClientOpenMenuPacket::encode, CompanionsClientOpenMenuPacket::decode, CompanionsClientOpenMenuPacket::handle);
+        **/
     }
 
     public static void sendToServer(Object msg) {

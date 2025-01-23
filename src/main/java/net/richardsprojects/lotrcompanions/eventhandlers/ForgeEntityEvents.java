@@ -1,38 +1,29 @@
 package net.richardsprojects.lotrcompanions.eventhandlers;
 
-import com.github.maximuslotro.lotrrextended.ExtendedLog;
 import lotr.common.entity.npc.*;
-import lotr.common.entity.npc.data.NPCEntitySettings;
-import lotr.common.entity.npc.data.NPCEntitySettingsManager;
-import lotr.common.init.ExtendedItems;
 import lotr.common.util.CoinUtils;
 import net.minecraft.entity.*;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.richardsprojects.lotrcompanions.container.CompanionContainer;
-import net.richardsprojects.lotrcompanions.container.CompanionEquipmentContainer;
 import net.richardsprojects.lotrcompanions.npcs.*;
 import net.richardsprojects.lotrcompanions.utils.TeleportHelper;
-
-import java.util.*;
 
 /**
  * For {@link net.minecraftforge.eventbus.api.Event} that are fired on the MinecraftForge.EVENT_BUS
  * */
 public class ForgeEntityEvents {
+    // TODO: Verify all these events still work with Gondor Soldiers from the code that
+    //  was moved to Renewed Extended
+    /**
     @SubscribeEvent
     public static void giveExperience(final LivingDeathEvent event) {
         Entity companion = event.getSource().getEntity();
-        if (companion instanceof HiredGondorSoldier || companion instanceof HiredBreeGuard) {
+        if (companion instanceof HiredGondorSoldier) {
             // base amount of xp off kill alignment bonus
             int xpPoints;
             NPCEntitySettings settings = NPCEntitySettingsManager.getEntityTypeSettings(event.getEntity());
@@ -45,8 +36,9 @@ public class ForgeEntityEvents {
             ((ExtendedHirableEntity) companion).giveExperiencePoints(xpPoints);
             ((ExtendedHirableEntity) companion).setMobKills(((ExtendedHirableEntity) companion).getMobKills() + 1);
         }
-    }
+    }*/
 
+    /**
     @SubscribeEvent
     public static void playerCloseInventory(final PlayerContainerEvent.Close event) {
         if (!((event.getContainer() instanceof CompanionContainer) ||
@@ -100,7 +92,7 @@ public class ForgeEntityEvents {
                     new ItemStack(ExtendedItems.SILVER_COIN_ONE.get(), new Random().nextInt(2) + 1));
             event.getDrops().add(entity);
         }
-    }
+    }*/
 
     @SubscribeEvent
     public static void hireGondorSoldier(PlayerInteractEvent.EntityInteract event) {
@@ -146,51 +138,6 @@ public class ForgeEntityEvents {
     }
 
     @SubscribeEvent
-    public static void hireBreeGuard(PlayerInteractEvent.EntityInteract event) {
-        // only allow this event to run on the server
-        if (!(event.getWorld() instanceof ServerWorld)) {
-            return;
-        }
-
-        if (!(event.getTarget() instanceof BreeGuardEntity)) {
-            return;
-        }
-
-        if (event.getTarget() instanceof HiredBreeGuard) {
-            return;
-        }
-
-        // check that they have a coin in their hand
-        if (!CoinUtils.isValidCoin(event.getItemStack())) {
-            return;
-        }
-
-        // TODO: Make prices be based upon faction reputation
-
-        int coins = CoinUtils.totalValueInInventory(event.getPlayer().inventory);
-        if (coins < 40) {
-            event.getPlayer().sendMessage(new StringTextComponent("I require 40 coins in payment to be hired."), event.getPlayer().getUUID());
-            return;
-        }
-
-        BreeGuardEntity breeGuard = (BreeGuardEntity) event.getTarget();
-        HiredBreeGuard newEntity = (HiredBreeGuard) LOTRCNpcs.HIRED_BREE_GUARD.get().spawn(
-                (ServerWorld) event.getWorld(), null,
-                event.getPlayer(), new BlockPos(breeGuard.getX(), breeGuard.getY(), breeGuard.getZ()),
-                SpawnReason.NATURAL, false, false
-        );
-
-        // TODO: Update gear to match correctly
-
-        if (newEntity != null) {
-            newEntity.tame(event.getPlayer());
-            breeGuard.remove();
-            CoinUtils.removeCoins(event.getPlayer(), event.getPlayer().inventory, 40);
-            event.getPlayer().sendMessage(new StringTextComponent("The Bree-land Guard has been hired for 40 coins"), event.getPlayer().getUUID());
-        }
-    }
-
-    @SubscribeEvent
     public static void onPlayerTeleport(EntityTeleportEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity)) {
             return;
@@ -205,7 +152,9 @@ public class ForgeEntityEvents {
         BlockPos targetPos = new BlockPos(event.getTargetX(), event.getTargetY(), event.getTargetZ());
         TeleportHelper.teleportUnitsToPlayer(originalPos, targetPos, world, (PlayerEntity) event.getEntity());
     }
-
+    // TODO: Verify this event that was moved to Renewed Extended works with
+    //  Gondor Soldiers
+    /**
     @SubscribeEvent
     public static void preventFriendlyFireFromPlayerToCompanion(LivingAttackEvent event) {
         ExtendedHirableEntity hired = HiredUnitHelper.getExtendedHirableEntity(event.getEntity());
@@ -223,5 +172,5 @@ public class ForgeEntityEvents {
                 event.setCanceled(true);
             }
         }
-    }
+    }*/
 }

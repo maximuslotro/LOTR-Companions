@@ -7,7 +7,6 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.fml.RegistryObject;
-import net.richardsprojects.lotrcompanions.npcs.HiredBreeGuard;
 import net.richardsprojects.lotrcompanions.npcs.HiredGondorSoldier;
 import net.richardsprojects.lotrcompanions.npcs.LOTRCNpcs;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,7 +35,6 @@ public class LOTREntitiesMixin {
     private static void bootstrapExtendedItems(CallbackInfo ci) {
         // for these specific npcs we have custom Spawn Eggs that we create for spawning them already assigned to the
         // person who spawned them so we can't use the existing implementation from Renewed
-        LOTRCNpcs.HIRED_BREE_GUARD = regNPCWithoutSpawnEgg("hired_bree_guard", HiredBreeGuard::new, HiredBreeGuard::regAttrs, LOTREntities.EntitySizeHolder.manSize());
         LOTRCNpcs.HIRED_GONDOR_SOLDIER = regNPCWithoutSpawnEgg("hired_gondor_soldier", HiredGondorSoldier::new, HiredGondorSoldier::regAttrs, LOTREntities.EntitySizeHolder.manSize());
     }
 
