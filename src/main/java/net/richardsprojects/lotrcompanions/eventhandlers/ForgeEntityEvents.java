@@ -137,6 +137,9 @@ public class ForgeEntityEvents {
         }
     }
 
+    // TODO: Verify this event that was moved to Renewed Extended works with
+    //  Gondor Soldiers
+    /**
     @SubscribeEvent
     public static void onPlayerTeleport(EntityTeleportEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity)) {
@@ -151,7 +154,7 @@ public class ForgeEntityEvents {
         BlockPos originalPos = new BlockPos(event.getPrevX(), event.getPrevY(), event.getPrevZ());
         BlockPos targetPos = new BlockPos(event.getTargetX(), event.getTargetY(), event.getTargetZ());
         TeleportHelper.teleportUnitsToPlayer(originalPos, targetPos, world, (PlayerEntity) event.getEntity());
-    }
+    }**/
     // TODO: Verify this event that was moved to Renewed Extended works with
     //  Gondor Soldiers
     /**
