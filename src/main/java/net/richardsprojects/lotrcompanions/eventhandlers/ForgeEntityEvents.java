@@ -3,15 +3,12 @@ package net.richardsprojects.lotrcompanions.eventhandlers;
 import lotr.common.entity.npc.*;
 import lotr.common.util.CoinUtils;
 import net.minecraft.entity.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.richardsprojects.lotrcompanions.npcs.*;
-import net.richardsprojects.lotrcompanions.utils.TeleportHelper;
 
 /**
  * For {@link net.minecraftforge.eventbus.api.Event} that are fired on the MinecraftForge.EVENT_BUS
