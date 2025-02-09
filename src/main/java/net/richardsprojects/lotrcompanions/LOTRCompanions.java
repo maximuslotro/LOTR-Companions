@@ -1,17 +1,13 @@
 package net.richardsprojects.lotrcompanions;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.richardsprojects.lotrcompanions.client.render.HiredGondorSoldierRenderer;
-import net.richardsprojects.lotrcompanions.core.PacketHandler;
 import net.richardsprojects.lotrcompanions.eventhandlers.LOTRFastTravelEventHandler;
 import net.richardsprojects.lotrcompanions.npcs.LOTRCNpcs;
 import net.richardsprojects.lotrcompanions.eventhandlers.ForgeEntityEvents;
@@ -40,15 +36,6 @@ public class LOTRCompanions {
         eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         LOTRCItems.ITEMS.register(eventBus);
         eventBus.register(this);
-
-        PacketHandler.register();
-    }
-
-    private static String addDashesToUUID(String uuid) {
-        return uuid.replaceFirst(
-                "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
-                "$1-$2-$3-$4-$5"
-        );
     }
 
     @SubscribeEvent
