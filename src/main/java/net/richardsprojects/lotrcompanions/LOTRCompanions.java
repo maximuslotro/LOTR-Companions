@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.richardsprojects.lotrcompanions.client.render.HiredGondorSoldierRenderer;
-import net.richardsprojects.lotrcompanions.eventhandlers.LOTRFastTravelEventHandler;
 import net.richardsprojects.lotrcompanions.npcs.LOTRCNpcs;
 import net.richardsprojects.lotrcompanions.eventhandlers.ForgeEntityEvents;
 import net.richardsprojects.lotrcompanions.item.LOTRCItems;
@@ -30,7 +29,6 @@ public class LOTRCompanions {
     	// register Listeners that use the Forge Event Bus
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(ForgeEntityEvents.class);
-        MinecraftForge.EVENT_BUS.register(LOTRFastTravelEventHandler.class);
 
         // register Listeners that use the Mod Event Bus
         eventBus = FMLJavaModLoadingContext.get().getModEventBus();
