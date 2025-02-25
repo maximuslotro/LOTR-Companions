@@ -14,7 +14,6 @@ import lotr.common.entity.npc.GondorSoldierEntity;
 
 import lotr.common.entity.npc.ai.goal.*;
 import lotr.common.util.ExtendedHiredUnitHelper;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -597,26 +596,11 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean player) {
     	// Disabled due to NPCEntity using new logic we don't want for unit drops
     	//super.dropCustomDeathLoot(damageSource, looting, player);
-
-    	for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-    		ItemStack itemstack = this.getItemBySlot(slot);
-    		float dropChance = this.getEquipmentDropChance(slot);
-    		boolean isEquipedItem = !(itemstack.hasTag() && itemstack.getTag().getBoolean("IsBaseArmor"));
-    		boolean dropUndamaged = dropChance > 1.0F || isEquipedItem;
-    		if (!itemstack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemstack) && (isEquipedItem || (player || dropUndamaged)
-    				&& Math.max(this.random.nextFloat() - (float) looting * 0.01F, 0.0F) < dropChance)) {
-    			if (!dropUndamaged && itemstack.isDamageableItem()) {
-    				itemstack.setDamageValue(itemstack.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(itemstack.getMaxDamage() - 3, 1))));
-    			}
-
-    			this.spawnAtLocation(itemstack);
-    			this.setItemSlot(slot, ItemStack.EMPTY);
-    		}
-    	}
-    	for (int i = 0; i < 9; ++i) {
-    		ItemStack itemstack = internalUnitInventory.getItem(i).copy();
-    		this.spawnAtLocation(itemstack);
-    		internalUnitInventory.setItem(i, ItemStack.EMPTY);
-    	}
+		ExtendedHiredUnitHelper.dropCustomDeathLoot(this, this, random, internalUnitInventory, looting, player);
     }
+
+	@Override
+	public float getHiredUnitEquipmentDropChance(EquipmentSlotType arg0) {
+		return getEquipmentDropChance(arg0);
+	}
 }
