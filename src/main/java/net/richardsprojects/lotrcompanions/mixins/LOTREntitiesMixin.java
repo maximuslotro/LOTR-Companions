@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 @Mixin(LOTREntities.class)
 public class LOTREntitiesMixin {
 
-    @Shadow
+    @Shadow(remap=false)
     private static final Map<EntityType<? extends LivingEntity>, Supplier<AttributeModifierMap.MutableAttribute>> ENTITY_ATTRIBUTE_FACTORIES = new HashMap<>();
 
     @Shadow(remap = false)
