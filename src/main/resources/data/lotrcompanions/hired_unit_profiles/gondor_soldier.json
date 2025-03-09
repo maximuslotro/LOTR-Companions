@@ -4,9 +4,12 @@
     "translateStrings": true,
     "entity_title": "entity_title.lotrcompanions.hired_gondor_soldier",
     "entity_shortname": "entity.lotr.shortname.hired_gondor_soldier",
-    "entity_unit_type": "entity.lotr.hired_gondor_soldier",
-    "hiringCost": 30,
-    "hiringRequiresPledge": false
+    "entity_unit_type": "entity.lotr.hired_gondor_soldier"
+  },
+  "hiring":{
+    "hiringCost": 60,
+    "hiringRequiresPledge": false,
+    "hiringAlignmentRequired": 60
   },
   "equipmentPools": {
     "helmets": [
@@ -45,7 +48,7 @@
         }
       }
     ],
-    "weapons": [
+    "melee": [
       {
         "weight": 1,
         "equipmentItem": {

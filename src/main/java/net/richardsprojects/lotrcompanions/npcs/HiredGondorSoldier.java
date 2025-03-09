@@ -11,7 +11,7 @@ import com.github.maximuslotro.lotrrextended.common.network.ExtendedCOpenHiredMe
 import com.github.maximuslotro.lotrrextended.common.network.ExtendedPacketHandler;
 import lotr.common.entity.npc.ExtendedHirableEntity;
 import lotr.common.entity.npc.GondorSoldierEntity;
-
+import lotr.common.entity.npc.NPCEntity;
 import lotr.common.entity.npc.ai.goal.*;
 import lotr.common.util.ExtendedHiredUnitHelper;
 import net.minecraft.entity.*;
@@ -23,7 +23,6 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -126,47 +125,11 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         internalUnitInventory.setItem(16, getUnitProfile().getEquipmentPools().getRandomChestplateStack(random));
         internalUnitInventory.setItem(17, getUnitProfile().getEquipmentPools().getRandomLeggingsStack(random));
         internalUnitInventory.setItem(18, getUnitProfile().getEquipmentPools().getRandomBootsStack(random));
-        internalUnitInventory.setItem(19, getUnitProfile().getEquipmentPools().getRandomWeaponStack(random));
+        internalUnitInventory.setItem(19, getUnitProfile().getEquipmentPools().getRandomMeleeStack(random));
         internalUnitInventory.setItem(20, getUnitProfile().getEquipmentPools().getRandomOffhandStack(random));
         // Needed to sync unit equipment on unit creation
         inventoryNeedsSetupSyncing=true;
     	return spawnData;
-    }
-    
-    @Override
-	public void updateHeadSlot(ItemStack stack) {
-    	internalUnitInventory.setItem(9, stack);
-        inventoryNeedsSetupSyncing=true;
-    }
-
-    @Override
-	public void updateChestSlot(ItemStack stack) {
-    	internalUnitInventory.setItem(10, stack);
-        inventoryNeedsSetupSyncing=true;
-    }
-
-    @Override
-	public void updateLegsSlot(ItemStack stack) {
-    	internalUnitInventory.setItem(11, stack);
-        inventoryNeedsSetupSyncing=true;
-    }
-
-    @Override
-	public void updateFeetSlot(ItemStack stack) {
-    	internalUnitInventory.setItem(12, stack);
-        inventoryNeedsSetupSyncing=true;
-    }
-
-    @Override
-	public void updateMainhandSlot(ItemStack stack) {
-    	internalUnitInventory.setItem(13, stack);
-        inventoryNeedsSetupSyncing=true;
-    }
-
-    @Override
-	public void updateOffhandSlot(ItemStack stack) {
-    	internalUnitInventory.setItem(14, stack);
-        inventoryNeedsSetupSyncing=true;
     }
 
 	@Override
@@ -375,13 +338,7 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
             tag.putUUID("Owner", this.getOwnerUUID());
         }
 
-        // create temp NonNullList to save inventory to
-        NonNullList<ItemStack> items = NonNullList.withSize(21, ItemStack.EMPTY);
-        for (int i = 0; i < 21; i++) {
-            ItemStack item = internalUnitInventory.getItem(i);
-            items.set(i, item);
-        }
-        ItemStackHelper.saveAllItems(tag, items);
+        loadHiredUnitInventory(tag);
 
         tag.putBoolean("following", this.isFollowing());
         tag.putBoolean("stationary", this.isStationary());
@@ -476,14 +433,7 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
             }
         }
 
-        NonNullList<ItemStack> itemsStacks = NonNullList.withSize(21, ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(tag, itemsStacks);
-        for (int i = 0; i < 21; i++) {
-            this.internalUnitInventory.setItem(i, itemsStacks.get(i));
-        }
-
-        // Need to setup equipment on NBT load
-        inventoryNeedsSetupSyncing = true;
+        saveHiredUnitInventory(tag);
 
         if (tag.contains("following")) {
             this.setFollowing(tag.getBoolean("following"));
@@ -552,11 +502,6 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
         }
     }
 
-    @Override
-    public int getHiredUnitId() {
-        return getId();
-    }
-
     public void modifyMaxHealth(int change, String name, boolean permanent) {
         ModifiableAttributeInstance attributeInstance = this.getAttribute(Attributes.MAX_HEALTH);
         Set<AttributeModifier> modifiers = attributeInstance.getModifiers();
@@ -602,5 +547,15 @@ public class HiredGondorSoldier extends GondorSoldierEntity implements ExtendedH
 	@Override
 	public float getHiredUnitEquipmentDropChance(EquipmentSlotType arg0) {
 		return getEquipmentDropChance(arg0);
+	}
+
+	@Override
+	public NPCEntity getThis() {
+		return this;
+	}
+
+	@Override
+	public void setNeedsSyncing() {
+		this.inventoryNeedsSetupSyncing=true;
 	}
 }
