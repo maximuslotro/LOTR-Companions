@@ -18,7 +18,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '0.4.0'
+version = '0.4.1'
 group = 'net.richardsprojects.lotrcompanions' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'lotrcompanions'
 
@@ -134,7 +134,7 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.39'
     implementation fg.deobf("curse.maven:the-lord-of-the-rings-mod-renewed-406893:3661524")
-    implementation fg.deobf("lotr:lotr-1.16-extended-beta:1.7.2-alpha-1")
+    implementation fg.deobf("curse.maven:lotr-renewed-extended-954566:6249358")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
