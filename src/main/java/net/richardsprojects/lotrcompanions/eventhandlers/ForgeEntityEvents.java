@@ -17,9 +17,6 @@ public class ForgeEntityEvents {
 
     @SubscribeEvent
     public static void hireGondorSoldier(PlayerInteractEvent.EntityInteract event) {
-        // TODO: Clean up code between hireGondorSoldier and hireBreelandGuard so that they are one method with less
-        //  repeated code
-
         // only allow this event to run on the server
         if (!(event.getWorld() instanceof ServerWorld)) {
             return;
