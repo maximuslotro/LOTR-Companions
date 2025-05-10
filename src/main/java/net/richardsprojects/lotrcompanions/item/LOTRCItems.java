@@ -9,9 +9,7 @@ import net.richardsprojects.lotrcompanions.LOTRCompanions;
 
 public class LOTRCItems {
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,
-            LOTRCompanions.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, LOTRCompanions.MOD_ID);
 
-    public static final RegistryObject<ForgeSpawnEggItem> HIRED_GONDOR_SOLDIER_EGG = ITEMS.register("hired_gondor_soldier_spawn_egg",
-            HiredGondorSoldierEggItem::new);
+    public static final RegistryObject<ForgeSpawnEggItem> HIRED_GONDOR_SOLDIER_EGG = ITEMS.register("hired_gondor_soldier_spawn_egg", HiredGondorSoldierEggItem::new);
 }
