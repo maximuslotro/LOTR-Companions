@@ -1,5 +1,8 @@
 package net.richardsprojects.lotrcompanions.eventhandlers;
 
+import com.github.maximuslotro.lotrrextended.common.hiredunits.ExtendedServerHiredUnitProfile;
+import com.github.maximuslotro.lotrrextended.common.hiredunits.ExtendedServerHiredUnitProfileManager;
+
 import lotr.common.entity.npc.*;
 import lotr.common.util.CoinUtils;
 import net.minecraft.entity.*;
@@ -8,7 +11,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.richardsprojects.lotrcompanions.npcs.*;
+import net.richardsprojects.lotrcompanions.LOTRCompanions;
 
 /**
  * For {@link net.minecraftforge.eventbus.api.Event} that are fired on the MinecraftForge.EVENT_BUS
@@ -26,7 +29,7 @@ public class ForgeEntityEvents {
             return;
         }
 
-        if (event.getTarget() instanceof HiredGondorSoldier) {
+        if (((ExtendedNPCEntity)event.getTarget()).getUnitInfo().isNpcActiveDuty()) {
             return;
         }
 
@@ -42,13 +45,12 @@ public class ForgeEntityEvents {
         }
 
         GondorSoldierEntity gondorSoldier = (GondorSoldierEntity) event.getTarget();
-        HiredGondorSoldier newEntity = (HiredGondorSoldier) LOTRCNpcs.HIRED_GONDOR_SOLDIER.get().spawn(
-                (ServerWorld) event.getWorld(), null,
-                event.getPlayer(), new BlockPos(gondorSoldier.getX(), gondorSoldier.getY(), gondorSoldier.getZ()),
-                SpawnReason.NATURAL, false, false
-        );
-        if (newEntity != null) {
-            newEntity.tame(event.getPlayer());
+        ExtendedServerHiredUnitProfile unitProfile = ExtendedServerHiredUnitProfileManager.INSTANCE.get(LOTRCompanions.gondor_soldier);
+        Entity newEntity = unitProfile.getUnitEntityType().spawn((ServerWorld) event.getWorld(), 
+        	null, event.getPlayer(), new BlockPos(gondorSoldier.getX(), gondorSoldier.getY(), gondorSoldier.getZ()), 
+        	SpawnReason.NATURAL, false, false);
+        if (newEntity != null && newEntity instanceof NPCEntity) {
+        	((ExtendedNPCEntity)newEntity).getUnitInfo().setNpcAsHired(event.getPlayer(), unitProfile.getId());
             gondorSoldier.remove();
             CoinUtils.removeCoins(event.getPlayer(), event.getPlayer().inventory, 60);
             event.getPlayer().sendMessage(new StringTextComponent("The Gondor Soldier has been hired for 60 coins"), event.getPlayer().getUUID());

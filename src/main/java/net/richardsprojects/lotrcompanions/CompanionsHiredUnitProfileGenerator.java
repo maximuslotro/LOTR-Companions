@@ -6,10 +6,10 @@ import com.github.maximuslotro.lotrrextended.common.datagen.entity.hiredunitprof
 import com.github.maximuslotro.lotrrextended.common.enums.ExtendedUnitAttackType;
 import com.github.maximuslotro.lotrrextended.common.hiredunits.ExtendedServerHiredUnitProfile;
 
+import lotr.common.init.LOTREntities;
 import lotr.common.init.LOTRItems;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.ItemStack;
-import net.richardsprojects.lotrcompanions.npcs.LOTRCNpcs;
 
 public class CompanionsHiredUnitProfileGenerator extends ExtendedServerHiredUnitProfileGenerator{
 
@@ -19,7 +19,7 @@ public class CompanionsHiredUnitProfileGenerator extends ExtendedServerHiredUnit
 
 	@Override
 	public void makeStructureSpawnPools(Consumer<ExtendedServerHiredUnitProfile> pConsumer) {
-		this.make( LOTRCNpcs.HIRED_GONDOR_SOLDIER.get(), ExtendedUnitAttackType.MELEE)
+		this.make(LOTREntities.GONDOR_SOLDIER.get(), ExtendedUnitAttackType.MELEE)
 		.setLocal(true, "gondor_soldier", "Gondor Soldier").setPurchaseInfo(60, false, 60)
 		.addHelmetPoolItem(new ItemStack(LOTRItems.GONDOR_HELMET.get()), 1)
 		.addChestplatePoolItem(new ItemStack(LOTRItems.GONDOR_CHESTPLATE.get()), 1)

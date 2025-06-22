@@ -1,6 +1,6 @@
 {
   "id": "lotrcompanions:gondor_soldier",
-  "entity_type": "lotr:hired_gondor_soldier",
+  "entity_type": "lotr:gondor_soldier",
   "language": {
     "translateStrings": true,
     "entity_title": "entity_title.lotrcompanions.hired_gondor_soldier",
