@@ -18,8 +18,7 @@ public class CompanionsDataIdFixer {
 			ResourceLocation entryLocation = mapping.key;
 			if (entryLocation.equals(GONDOR_SOLDIER)) {
 				mapping.remap(LOTREntities.GONDOR_SOLDIER.get());
-				ExtendedLog.infoParms("Remapped entity, old id was=%s, new id is=%s", GONDOR_SOLDIER, LOTREntities.GONDOR_SOLDIER.get().getRegistryName());
-
+				ExtendedLog.info("Remapped entity, old id was=%s, new id is=%s", GONDOR_SOLDIER, LOTREntities.GONDOR_SOLDIER.get().getRegistryName());
 				continue;
 			}
 		}

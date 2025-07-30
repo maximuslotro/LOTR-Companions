@@ -14,13 +14,13 @@ import net.minecraft.item.ItemStack;
 public class CompanionsHiredUnitProfileGenerator extends ExtendedServerHiredUnitProfileGenerator{
 
 	public CompanionsHiredUnitProfileGenerator(DataGenerator pDataGenerator, String pModId) {
-		super(pDataGenerator, pModId);
+		super(pDataGenerator, "lotrextended");
 	}
 
 	@Override
 	public void makeStructureSpawnPools(Consumer<ExtendedServerHiredUnitProfile> pConsumer) {
 		this.make(LOTREntities.GONDOR_SOLDIER.get(), ExtendedUnitAttackType.MELEE)
-		.setLocal(true, "gondor_soldier", "Gondor Soldier").setPurchaseInfo(60, false, 60)
+		.setPurchaseInfo(60, false, 60)
 		.addHelmetPoolItem(new ItemStack(LOTRItems.GONDOR_HELMET.get()), 1)
 		.addChestplatePoolItem(new ItemStack(LOTRItems.GONDOR_CHESTPLATE.get()), 1)
 		.addLeggingPoolItem(new ItemStack(LOTRItems.GONDOR_LEGGINGS.get()), 1)
