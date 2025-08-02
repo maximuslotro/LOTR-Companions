@@ -18,7 +18,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '0.4.2'
+version = '0.4.3'
 group = 'net.richardsprojects.lotrcompanions' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'lotrcompanions'
 
@@ -84,7 +84,8 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.39'
     implementation fg.deobf("curse.maven:the-lord-of-the-rings-mod-renewed-406893:3661524")
-    implementation fg.deobf("curse.maven:lotr-renewed-extended-954566:6478584")
+    //implementation fg.deobf("lotr:lotr-1.16-extended-beta:1.8.0-alpha-5")
+    implementation fg.deobf("curse.maven:lotr-renewed-extended-954566:6831228")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
@@ -102,13 +103,13 @@ project.processResources {
 	}
 }
 
-mixin {
-    add sourceSets.main, "lotrcompanions.mixin.refmap.json"
-
-    config 'lotrcompanions.mixin.json'
-    disableTargetValidator = false
-    overwriteErrorLevel = 'error'
-}
+//mixin {
+//    add sourceSets.main, "lotrcompanions.mixin.refmap.json"
+//
+//    config 'lotrcompanions.mixin.json'
+//    disableTargetValidator = false
+//    overwriteErrorLevel = 'error'
+//}
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
